@@ -1409,7 +1409,7 @@ select {
         </div></div>
 
         <div class="block"><div class="bhead"><span class="btag r">1</span><span class="btitle">Remitente</span><span class="bsaved" id="bs-sender">✓ guardado</span></div><div class="bbody"><div class="fr"><textarea id="senderBlock" placeholder="Empresa Exportadora S.L.&#10;Calle Mayor, 45 – Nave 3&#10;41500 Sevilla&#10;España" rows="5"></textarea></div>
-            <div class="fr" id="senderNIFRow"><label for="senderNIF">NIF Remitente / Cargador <span style="color:#e11d48">*</span></label><input id="senderNIF" type="text" placeholder="B12345678" style="text-transform:uppercase"/></div>
+            <div class="fr" id="senderNIFRow"><label for="senderNIF">NIF Remitente / Cargador <span style="color:#e11d48">*</span></label><input id="senderNIF" type="text" placeholder="B12345678" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase();" onblur="_pintarNif('senderNIF')" autocomplete="off" spellcheck="false"/></div>
         </div></div>
 
         <div class="block"><div class="bhead"><span class="btag b">2</span><span class="btitle">Consignatario</span></div><div class="bbody"><div class="qf-row" id="rcv-qf"></div><div class="fr"><textarea id="rcvBlock" placeholder="Importadora GmbH&#10;Industriestrasse, 12&#10;10115 Berlín&#10;Alemania" rows="5"></textarea></div><div style="text-align:right;margin-top:6px"><span class="qf-pill" onclick="saveRcvToAgenda()">+ Guardar en agenda</span></div></div></div>
@@ -1417,25 +1417,33 @@ select {
         <div class="block"><div class="bhead"><span class="btag g">3 · 4 · 5</span><span class="btitle">Recogida y Entrega</span></div><div class="bbody">
             <div class="fr"><label for="placeLoading">Lugar de Carga</label><input id="placeLoading" type="text" placeholder="Polígono Industrial Norte, Sevilla"/></div>
             <div class="fr"><label for="placeDelivery">Lugar de Entrega</label><input id="placeDelivery" type="text" placeholder="Almacén Central, Berlín"/></div>
-            <div class="fr2">
-                <div class="fr"><label for="dateDelivery">Fecha Prevista Entrega</label><input id="dateDelivery" type="date"/></div>
-                <div class="fr"><label for="clientRef">Referencia Cliente</label><input id="clientRef" type="text" placeholder="PO-2024-XXX"/></div>
+<div class="fr2">
+                <div class="fr"><label for="docDate">Fecha de emisión</label><input id="docDate" type="date"/></div>
+                <div class="fr"><label for="dateTransport">Fecha de realización del transporte <span style="font-size:.6rem;color:var(--dim);font-weight:400">(Ley 9/2025 · DeCA)</span></label><input id="dateTransport" type="date"/></div>
             </div>
         </div></div>
 
         <div class="block"><div class="bhead"><span class="btag g">16</span><span class="btitle">Transportista</span><span class="bsaved" id="bs-carrier">✓ guardado</span></div><div class="bbody">
             <div class="qf-row" id="car-qf"></div>
             <div class="fr"><textarea id="carrierBlock" placeholder="Transportes García S.L.&#10;Calle Transporte, 8&#10;41007 Sevilla&#10;España" rows="5"></textarea></div>
-            <div class="fr" id="carrierNIFRow"><label for="carrierNIF">NIF Transportista efectivo <span style="color:#e11d48">*</span></label><input id="carrierNIF" type="text" placeholder="B87654321" style="text-transform:uppercase"/></div>
+            <div class="fr" id="carrierNIFRow"><label for="carrierNIF">NIF Transportista efectivo <span style="color:#e11d48">*</span></label><input id="carrierNIF" type="text" placeholder="B87654321" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase();" onblur="_pintarNif('carrierNIF')" autocomplete="off" spellcheck="false"/></div>
             <div style="text-align:right;margin-top:6px"><span class="qf-pill" onclick="saveCarToAgenda()">+ Guardar transportista en agenda</span></div>
             <div class="divl"></div>
             <div class="ssep">Vehículo y Conductor</div>
             <div class="qf-row" id="drv-qf"></div>
             <div class="fr"><label for="driverName">Conductor</label><input id="driverName" type="text" placeholder="Nombre y apellidos"/></div>
-            <div class="fr"><label for="driverDNI">DNI Conductor</label><input id="driverDNI" type="text" placeholder="12345678X"/></div>
+            <div class="fr"><label for="driverDNI">DNI Conductor</label><input id="driverDNI" type="text" placeholder="12345678X" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase();" onblur="_pintarNif('driverDNI')" autocomplete="off" spellcheck="false"/></div>
             <div class="fr2">
-                <div class="fr"><label for="plateTractor">Matrícula Tractora</label><input id="plateTractor" type="text" placeholder="1234 ABC" style="text-transform:uppercase"/></div>
+                <div class="fr"><label for="driverCAP">CAP Conductor <span style="font-size:.6rem;color:var(--dim);font-weight:400">(art. 6.b Ley 9/2025)</span></label><input id="driverCAP" type="text" placeholder="Nº certificado CAP"/></div>
+                <div class="fr"><label for="driverPermiso">Permiso de conducir</label><input id="driverPermiso" type="text" placeholder="Tipo / fechas"/></div>
+            </div>
+            <div class="fr2">
+                <div class="fr"><label for="plateTractor">Matrícula del vehículo tractor</label><input id="plateTractor" type="text" placeholder="1234 ABC" style="text-transform:uppercase"/></div>
                 <div class="fr"><label for="plateTrailer">Matrícula Semirremolque</label><input id="plateTrailer" type="text" placeholder="R-5678 BC" style="text-transform:uppercase"/></div>
+            </div>
+            <div class="fr2">
+                <div class="fr"><label for="conjuntoArticulado">Conjunto articulado <span style="font-size:.6rem;color:var(--dim);font-weight:400">(art. 6.g)</span></label><select id="conjuntoArticulado"><option value="">— Solo tractor</option><option value="SI">Sí — tractor + semirremolque</option></select></div>
+                <div class="fr"><label>&nbsp;</label><div class="hint" style="margin-top:2px">Si es conjunto articulado, la matrícula del semirremolque es obligatoria para el DeCA.</div></div>
             </div>
             <div style="text-align:right;margin-top:6px"><span class="qf-pill" onclick="saveDrvToAgenda()">+ Guardar conductor en agenda</span></div>
         </div></div>
@@ -1466,6 +1474,8 @@ select {
 
         <div class="block"><div class="bhead"><span class="btag b">13 · 19 · 14</span><span class="btitle">Instrucciones y Condiciones</span></div><div class="bbody">
             <div class="fr"><label for="senderInstr">Instrucciones del Remitente</label><textarea id="senderInstr" rows="2"></textarea></div>
+            <div class="fr"><label for="authEspecial">Autorización especial de circulación <span style="font-size:.6rem;color:var(--dim);font-weight:400">(art. 6.e — solo si el vehículo circula amparado)</span></label><input id="authEspecial" type="text" placeholder="N.º de autorización + órgano que la expide"/></div>
+            <div class="fr"><label for="cambioVehiculo">Cambio de vehículo durante el servicio <span style="font-size:.6rem;color:var(--dim);font-weight:400">(art. 6.g)</span></label><input id="cambioVehiculo" type="text" placeholder="Si hubo cambio: matrícula anterior → nueva, fecha y hora"/></div>
             <div class="fr2">
                 <div class="fr"><label for="freightTerms">Franqueo</label><select id="freightTerms"><option value="">—</option><option value="PORT PAGADO">Port Pagado</option><option value="PORT DEBIDO">Port Debido</option><option value="CONTRA REEMBOLSO">Contra Reembolso</option></select></div>
                 <div class="fr"><label for="codAmount">Reembolso €</label><input id="codAmount" type="number" placeholder="0.00" step="0.01" min="0"/></div>
@@ -1477,6 +1487,12 @@ select {
         <div class="block"><div class="bhead"><span class="btag r">22</span><span class="btitle">Firma del Remitente</span></div><div class="bbody"><div class="sig-box" id="sigWrapSender"><canvas id="sigCanvasSender" role="img" aria-label="Área de firma del remitente"></canvas><div class="sig-hint" id="sigHintSender">✎ Firma aquí</div></div><button class="sig-clr" onclick="clearSigSender()">✕ Borrar firma</button></div></div>
 
         <div class="block"><div class="bhead"><span class="btag g">23</span><span class="btitle">Firma del Conductor</span></div><div class="bbody"><div class="sig-box" id="sigWrap"><canvas id="sigCanvas" role="img" aria-label="Área de firma del conductor"></canvas><div class="sig-hint" id="sigHint">✎ Firma aquí</div></div><button class="sig-clr" onclick="clearSig()">✕ Borrar firma</button></div></div>
+        <div class="block"><div class="bhead"><span class="btag b">24</span><span class="btitle">Firma del Destinatario</span></div><div class="bbody"><div class="sig-box" id="sigWrapRcv"><canvas id="sigCanvasRcv" role="img" aria-label="Área de firma del destinatario"></canvas><div class="sig-hint" id="sigHintRcv">✎ Firma aquí</div></div><button class="sig-clr" onclick="clearSigRcv()">✕ Borrar firma</button><div class="hint" style="margin-top:8px">Se firma <b>en el momento de la entrega</b>, en la copia destinada al destinatario (casilla 24). En el CMR es donde se hacen constar las reservas.</div></div></div>
+
+        <div class="hint" style="border-left-color:var(--rose-l);background:linear-gradient(90deg,rgba(225,29,72,.06),rgba(225,29,72,.03))">
+            <b>Sobre estas firmas.</b> El DeCA se emite aquí como <b>documento de control administrativo</b>, para el cual la Resolución de 5/6/2026 <b>no exige firma</b>: lo obligatorio es el QR y la URL, y ambos se emiten. El trazo que dibujas es un elemento gráfico y <b>no es una firma electrónica</b>.<br><br>
+            Si además vas a usar la carta de porte como <b>documento contractual</b>, entonces sí se exige firma electrónica según el Reglamento (UE) 910/2014 (eIDAS): como mínimo <b>AdES</b> (avanzada) y, en su defecto, nada. Eso no puede hacerse con un lienzo en el navegador —necesita un prestador de servicios de confianza o un certificado cualificado— y la firma hecha a mano sobre una copia impresa, según la Resolución, <b>carece de validez</b> en el DeCA.
+        </div>
     </div>
 
     <!-- ── Panel: Hoy ── -->
@@ -1640,9 +1656,11 @@ select {
         <div class="block"><div class="bhead"><span class="btag t">DEF</span><span class="btitle">Datos por Defecto</span></div><div class="bbody">
             <div class="ssep">Remitente Habitual</div>
             <div class="fr"><textarea id="cfgSenderBlock" placeholder="Empresa Exportadora S.L.&#10;Calle Mayor, 45&#10;41500 Sevilla&#10;España" rows="5"></textarea></div>
+            <div class="fr"><label for="cfgSenderNIF">NIF / CIF Remitente <span style="font-size:.6rem;color:var(--dim)">(Ley 9/2025)</span></label><input id="cfgSenderNIF" type="text" placeholder="B-12345678" oninput="this.value=this.value.toUpperCase();"/></div>
             <div class="divl"></div>
             <div class="ssep">Transportista Habitual</div>
             <div class="fr"><textarea id="cfgCarrierBlock" placeholder="Transportes García S.L.&#10;Calle Transporte, 8&#10;41007 Sevilla&#10;España" rows="5"></textarea></div>
+            <div class="fr"><label for="cfgCarrierNIF">NIF / CIF Transportista <span style="font-size:.6rem;color:var(--dim)">(Ley 9/2025)</span></label><input id="cfgCarrierNIF" type="text" placeholder="B-87654321" oninput="this.value=this.value.toUpperCase();"/></div>
             <div class="fr"><label>Lugar Emisión por Defecto</label><input id="cfgEmission" type="text" placeholder="Sevilla, España"/></div>
             <button onclick="saveCfg()" style="width:100%;height:44px;margin-top:10px;border-radius:var(--r3);border:none;background:var(--blue);color:#fff;font-size:.88rem;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer">Guardar Configuración</button>
         </div></div>
@@ -1657,8 +1675,20 @@ select {
             <button onclick="window._changeCredentials()" style="width:100%;height:44px;margin-top:6px;border-radius:var(--r3);border:none;background:var(--blue);color:#fff;font-size:.88rem;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer">Actualizar credenciales</button>
         </div></div>
 
+        <div class="block"><div class="bhead"><span class="btag r">CARTAS DE PORTE</span><span class="btitle">Registro DeCA · Ley 9/2025</span></div><div class="bbody">
+            <div class="hint">La Resolución de 5/6/2026 obliga a registrar cada DeCA emitido: fecha/hora de creación y de modificación del fichero, encadenado por número de documento.</div>
+            <div id="decaLogList"><div class="hist-empty" style="padding:20px 0">Cargando…</div></div>
+        </div></div>
+
+        <div class="block"><div class="bhead"><span class="btag t">⚠</span><span class="btitle">Pendiente de configurar en Supabase</span></div><div class="bbody">
+            <div class="hint" style="border-left-color:var(--amber-l)">Estas dos cosas <b>no se pueden hacer desde la aplicación</b>: son configuración del servidor. Hasta que no se hagan, el DeCA se emite pero puede incumplir la norma.</div>
+            <div class="fr"><label>1. Retención mínima de 1 año</label><div style="font-size:.72rem;color:var(--dim);line-height:1.5">En Supabase → Storage → <b>deca-pdfs</b> → Lifecycle: crea una regla de borrado con antigüedad <b>≥ 365 días</b>. La Resolución de 5/6/2026 obliga a conservar el DeCA un año desde su firma. Si no hay regla, el bucket crece sin control; si es de 90 días, incumples.</div></div>
+            <div class="fr"><label>2. Permisos del bucket</label><div style="font-size:.72rem;color:var(--dim);line-height:1.5">El bucket debe ser <b>público en lectura</b> (el QR apunta a una URL directa, sin login) pero <b>cerrado en escritura</b> a la clave <code>anon</code>. Ahora mismo la clave de la línea 57 permite a cualquiera subir ficheros desde las devtools: revisa las políticas RLS y deja la escritura solo para el servicio.</div></div>
+            <div class="fr"><label>3. Comprobación de NIF</label><div style="font-size:.72rem;color:var(--dim);line-height:1.5">La app valida la <b>letra de control</b> (detecta tecleos), pero no consulta el Censo Fiscal de la AEAT: eso no tiene API pública y requiere gestor o proveedor de pago. Un NIF bien formado puede no existir.</div></div>
+        </div></div>
+
         <div class="block"><div class="bhead"><span class="btag r">BD</span><span class="btitle">Copia de Seguridad</span></div><div class="bbody">
-            <div class="hint">Exporta todos tus documentos, agenda y plantillas a un archivo JSON.</div>
+            <div class="hint">Exporta todos tus documentos, agenda, plantillas y registros DeCA a un archivo JSON.</div>
             <div class="backup-row">
                 <button onclick="exportDB()" class="save-btn" style="border-color:rgba(26,79,214,.3);color:var(--blue-l)">⬇ Exportar JSON</button>
                 <button onclick="importClick()" class="save-btn">⬆ Importar JSON</button>
@@ -1697,18 +1727,20 @@ const DB_N  = 'cmr_pro_v5';
 const STORE = 'cmr';
 const AG    = 'agenda';
 const TPL   = 'plantillas';
+const DECA  = 'deca';
 
 // Exponer constantes globalmente para que otros módulos las usen
 window.DB_STORE = STORE;
 window.DB_AG    = AG;
 window.DB_TPL   = TPL;
+window.DB_DECA  = DECA;
 
 let _db = null;
 
 function openDB() {
     return new Promise((res, rej) => {
         if (_db) { res(_db); return; }
-        const r = indexedDB.open(DB_N, 3);
+        const r = indexedDB.open(DB_N, 4);
         r.onupgradeneeded = e => {
             const db = e.target.result;
             if (!db.objectStoreNames.contains(STORE))
@@ -1717,6 +1749,8 @@ function openDB() {
                 db.createObjectStore(AG, { keyPath: 'id', autoIncrement: true });
             if (!db.objectStoreNames.contains(TPL))
                 db.createObjectStore(TPL, { keyPath: 'id', autoIncrement: true });
+            if (!db.objectStoreNames.contains(DECA))
+                db.createObjectStore(DECA, { keyPath: 'id', autoIncrement: true });
         };
         r.onsuccess = e => { _db = e.target.result; res(_db); };
         r.onerror   = rej;
@@ -1879,7 +1913,7 @@ window.syncActiveTemplate = async function (data) {
         const tpl = all.find(t => t.id == id);
         if (!tpl) { window._activeTemplateId = null; return; }
         const upd = { ...data };
-        delete upd.docNum; delete upd.docDate; delete upd.sigDriver; delete upd.sigSender;
+        delete upd.docNum; delete upd.docDate; delete upd.dateTransport; delete upd.sigDriver; delete upd.sigSender;
         delete upd._draftSavedAt; delete upd.templateId; delete upd.recordId;
         upd.templateName   = tpl.templateName;
         upd.templateClient = tpl.templateClient || '';
@@ -1960,7 +1994,7 @@ window._attachAutosaveListeners = attachAutosaveListeners;
 // ============================================================
 
 // ── Variables globales ────────────────────────────────────────
-let sigPad, sigPadSender;
+let sigPad, sigPadSender, sigPadRcv;
 window.logoDataURL = null;
 let goodsLineId = 0;
 let succId = 0;
@@ -2007,7 +2041,7 @@ window.tab = function(n) {
     if (n === 'hist')   renderHist();
     if (n === 'agenda') renderAgenda();
     if (n === 'tmpl')   renderTemplates();
-    if (n === 'cfg')    syncCfgPanel();
+    if (n === 'cfg')    { syncCfgPanel(); renderDecaLog(); }
     if (n === 'hoy')    renderHoy();
     if (n === 'ayer')   renderAyer();
     if (n === 'manana') renderManana();
@@ -2017,6 +2051,84 @@ window.tab = function(n) {
 const gv   = id => (document.getElementById(id) || {}).value?.trim() || '';
 const gvUp = id => gv(id).toUpperCase();
 const sv   = (id, v) => { const e = document.getElementById(id); if (e) e.value = v || ''; };
+
+// ── Validación de NIF / DNI / NIE (letra de control) ─────────────
+// La letra no es arbitraria: sale de dividir el número entre 23 y tomar el
+// resto como índice en la tabla TRWAGMYFPDXBNJZSQVHLCKE. Sirve para NIF de
+// empresa, DNI y NIE, que comparten el mismo algoritmo.
+//
+// OJO sobre el alcance: esto demuestra que el número está BIEN FORMADO, no que
+// exista ni que pertenezca a nadie. Comprobar eso exige consultar el Censo
+// Fiscal de la AEAT, que no tiene API pública (hay que pasar por gestor o por
+// un proveedor de pago). Un NIF bien formado puede no existir.
+const _TABLA_NIF = 'TRWAGMYFPDXBNJZSQVHLCKE';
+window._letraControl = function(numero) {
+    return _TABLA_NIF[Number(numero) % 23];
+};
+// Devuelve { ok, motivo, tipo, esperado } para un identificador introducido.
+window._validarNif = function(valor) {
+    const s = String(valor || '').toUpperCase().replace(/[\s.\-_]/g, '');
+    if (!s) return { ok:true, vacio:true };
+    // Persona jurídica y DNI: 8 dígitos + letra.
+    if (/^[0-9]{8}[A-Z]$/.test(s)) {
+        const esp = _letraControl(s.slice(0, 8));
+        return s[8] === esp
+            ? { ok:true, tipo:'NIF/DNI' }
+            : { ok:false, tipo:'NIF/DNI', esperado: s.slice(0,8) + esp,
+                motivo:'La letra no coincide con el número.' };
+    }
+    // NIE: X/Y/Z + 7 dígitos + letra (la letra inicial vale 0, 1 o 2).
+    if (/^[XYZ][0-9]{7}[A-Z]$/.test(s)) {
+        const ini = { 'X':0, 'Y':1, 'Z':2 }[s[0]];
+        const esp = _letraControl(String(ini) + s.slice(1, 8));
+        return s[8] === esp
+            ? { ok:true, tipo:'NIE' }
+            : { ok:false, tipo:'NIE', esperado: s.slice(0,8) + esp,
+                motivo:'La letra no coincide con el número.' };
+    }
+    // Formato no reconocido: no se bloquea, pero se avisa. Puede ser un CIF, un
+    // identificador extranjero en una carta CMR, o simplemente un error de tecleo.
+    return { ok:true, tipo:null, desconocido:true,
+             motivo:'No tiene formato de NIF, DNI ni NIE. Revísalo si es español.' };
+};
+// Marca visualmente el campo y escribe el motivo debajo. No bloquea: el
+// juicio de si el documento puede emitirse lo hace _nifBlockers().
+window._pintarNif = function(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const res = _validarNif(el.value);
+    const old = document.getElementById(id + '_nifmsg');
+    if (old) old.remove();
+    if (res.vacio) { el.style.borderColor = ''; el.removeAttribute('aria-invalid'); return; }
+    if (res.ok && !res.desconocido) {
+        el.style.borderColor = 'var(--teal-l)';
+        el.removeAttribute('aria-invalid');
+        return;
+    }
+    el.style.borderColor = res.desconocido ? 'var(--amber-l)' : 'var(--rose-l)';
+    el.setAttribute('aria-invalid', res.desconocido ? 'false' : 'true');
+    const d = document.createElement('div');
+    d.id = id + '_nifmsg';
+    d.className = 'hint';
+    d.style.cssText = 'margin-top:4px;font-size:.62rem;color:' +
+        (res.desconocido ? 'var(--amber-l)' : 'var(--rose-l)');
+    d.textContent = res.desconocido
+        ? '⚠ ' + res.motivo
+        : '✕ ' + res.motivo + ' ¿Querías decir ' + res.esperado + '?';
+    el.parentNode.insertBefore(d, el.nextSibling);
+};
+// Devuelve la lista de NIF con letra incorrecta. Vacío = se puede emitir.
+// Solo bloquea si el formato es el correcto pero la letra falla: eso es
+// siempre un error, no una excepción legítima.
+window._nifBlockers = function() {
+    const out = [];
+    [['senderNIF','NIF del remitente'], ['carrierNIF','NIF del transportista'],
+     ['driverDNI','DNI del conductor']].forEach(([id, lbl]) => {
+        const r = _validarNif(gv(id));
+        if (!r.ok) out.push({ id, lbl, motivo:r.motivo, esperado:r.esperado });
+    });
+    return out;
+};
 
 // Totales de mercancía de un registro: usa los campos agregados si existen
 // (registros nuevos), y si no, los recalcula a partir de goodsLines —
@@ -2054,9 +2166,9 @@ window.buildTplClientMap = async function() {
     return map;
 };
 
-const FIELDS = ['docNum','docDate','placeEmission','docsAnexos','senderBlock','senderNIF','rcvBlock',
+const FIELDS = ['docNum','docDate','dateTransport','placeEmission','docsAnexos','senderBlock','senderNIF','rcvBlock',
     'placeLoading','placeDelivery','dateDelivery','clientRef','carrierBlock','carrierNIF','driverName',
-    'driverDNI','plateTractor','plateTrailer','senderInstr','freightTerms','codAmount',
+    'driverDNI','driverCAP','driverPermiso','plateTractor','plateTrailer','conjuntoArticulado','senderInstr','authEspecial','cambioVehiculo','freightTerms','codAmount',
     'observations','tipoDoc','freeline-1','freeline-2','eurosCargados','eurosDevueltos'];
 
 window.collect = function() {
@@ -2085,6 +2197,7 @@ window.collect = function() {
     };
     d.sigDriver = compressSig(sigPad);
     d.sigSender = compressSig(sigPadSender);
+    d.sigRcv    = compressSig(sigPadRcv);
     d.selloDataURL = window.selloDataURL || null;
     return d;
 };
@@ -2093,7 +2206,34 @@ window.fill = function(d) {
     FIELDS.forEach(f => sv(f, d[f] || ''));
     try { fillGoodsLines(d.goodsLines || []); } catch (e) {}
     try { fillSuccessiveCarriers(d.successiveCarriers || []); } catch (e) {}
+    _restoreSigs(d);
 };
+
+// Pinta un dataURL de firma sobre un SignaturePad. fromDataURL es asíncrono.
+function _restoreSig(pad, dataURL, hintId) {
+    if (!pad) return;
+    if (dataURL && dataURL.startsWith('data:image')) {
+        const hint = document.getElementById(hintId);
+        if (hint) hint.style.opacity = '0';
+        const r = pad.fromDataURL(dataURL);
+        if (r && typeof r.then === 'function') r.catch(() => {});
+    } else {
+        const hint = document.getElementById(hintId);
+        if (hint) hint.style.opacity = '1';
+    }
+}
+
+// Restaura las firmas guardadas después de rellenar el formulario.
+function _restoreSigs(d) {
+    if (!sigPad && !sigPadSender && !sigPadRcv) {
+        // los pads se inicializan tras cargar las fuentes; reintenta 400ms
+        setTimeout(() => _restoreSigs(d), 400);
+        return;
+    }
+    _restoreSig(sigPad,      d.sigDriver, 'sigHint');
+    _restoreSig(sigPadSender, d.sigSender, 'sigHintSender');
+    _restoreSig(sigPadRcv,    d.sigRcv,    'sigHintRcv');
+}
 
 // ── Firmas ────────────────────────────────────────────────────
 window.initSig = function() {
@@ -2113,16 +2253,26 @@ window.initSig = function() {
         sigPadSender = new SignaturePad(c2, { backgroundColor: 'rgba(0,0,0,0)', penColor: '#1e3a8a', minWidth: 2, maxWidth: 3.5, throttle: 16 });
         sigPadSender.addEventListener('beginStroke', () => { document.getElementById('sigHintSender').style.opacity = '0'; });
     }
+    const c3 = document.getElementById('sigCanvasRcv'), w3 = document.getElementById('sigWrapRcv');
+    if (c3 && w3 && typeof SignaturePad !== 'undefined') {
+        const pr3 = window.devicePixelRatio || 1;
+        c3.width = w3.offsetWidth * pr3; c3.height = 220 * pr3; c3.style.height = '220px';
+        const ctx3 = c3.getContext('2d'); ctx3.scale(pr3, pr3);
+        sigPadRcv = new SignaturePad(c3, { backgroundColor: 'rgba(0,0,0,0)', penColor: '#1e3a8a', minWidth: 2, maxWidth: 3.5, throttle: 16 });
+        sigPadRcv.addEventListener('beginStroke', () => { document.getElementById('sigHintRcv').style.opacity = '0'; });
+    }
 };
 
 window.clearSig = () => { if (sigPad) sigPad.clear(); document.getElementById('sigHint').style.opacity = '1'; };
 window.clearSigSender = () => { if (sigPadSender) sigPadSender.clear(); document.getElementById('sigHintSender').style.opacity = '1'; };
+window.clearSigRcv = () => { if (sigPadRcv) sigPadRcv.clear(); document.getElementById('sigHintRcv').style.opacity = '1'; };
 
 window.addEventListener('resize', () => {
-    const d = sigPad?.toData() || [], d2 = sigPadSender?.toData() || [];
+    const d = sigPad?.toData() || [], d2 = sigPadSender?.toData() || [], d3 = sigPadRcv?.toData() || [];
     initSig();
     if (d.length && sigPad) sigPad.fromData(d);
     if (d2.length && sigPadSender) sigPadSender.fromData(d2);
+    if (d3.length && sigPadRcv) sigPadRcv.fromData(d3);
 });
 
 // ── Numeración ────────────────────────────────────────────────
@@ -2186,7 +2336,7 @@ window.saveDefaults = function() {
 
 window.saveCfg = function() {
     const cfg = JSON.parse(localStorage.getItem('cmr_cfg') || '{}');
-    Object.assign(cfg, { senderBlock: gv('cfgSenderBlock'), carrierBlock: gv('cfgCarrierBlock'), placeEmission: gv('cfgEmission'), prefix: gv('cfgPrefix') || 'CMR', prefixNacional: gv('cfgPrefixNacional') || 'CP' });
+    Object.assign(cfg, { senderBlock: gv('cfgSenderBlock'), carrierBlock: gv('cfgCarrierBlock'), placeEmission: gv('cfgEmission'), prefix: gv('cfgPrefix') || 'CMR', prefixNacional: gv('cfgPrefixNacional') || 'CP', senderNIF: gv('cfgSenderNIF'), carrierNIF: gv('cfgCarrierNIF') });
     localStorage.setItem('cmr_cfg', JSON.stringify(cfg));
     loadDefaults(); toast('✓ Configuración guardada', 'ok');
 };
@@ -2198,8 +2348,11 @@ window.loadDefaults = function() {
     if (cfg.carrierBlock) sv('carrierBlock', cfg.carrierBlock);
     if (cfg.placeEmission) sv('placeEmission', cfg.placeEmission);
     if (!gv('docDate')) sv('docDate', new Date().toISOString().split('T')[0]);
+    if (!gv('dateTransport')) sv('dateTransport', new Date().toISOString().split('T')[0]);
     if (!gv('docNum'))  sv('docNum', genDocNum());
     if (!gv('tipoDoc')) sv('tipoDoc', 'cmr');
+    if (cfg.senderNIF)  { sv('senderNIF',  cfg.senderNIF); sv('cfgSenderNIF', cfg.senderNIF); }
+    if (cfg.carrierNIF) { sv('carrierNIF', cfg.carrierNIF); sv('cfgCarrierNIF', cfg.carrierNIF); }
     if (cfg.senderBlock || cfg.carrierBlock) showBadges(true);
     window.logoDataURL = localStorage.getItem('cmr_logo') || null;
     if (window.logoDataURL) showLogoPreview(window.logoDataURL);
@@ -2211,6 +2364,7 @@ window.syncCfgPanel = function() {
     const cfg = JSON.parse(localStorage.getItem('cmr_cfg') || '{}');
     sv('cfgSenderBlock', cfg.senderBlock); sv('cfgCarrierBlock', cfg.carrierBlock);
     sv('cfgEmission', cfg.placeEmission);  sv('cfgPrefix', cfg.prefix || 'CMR');  sv('cfgPrefixNacional', cfg.prefixNacional || 'CP');
+    sv('cfgSenderNIF', cfg.senderNIF || ''); sv('cfgCarrierNIF', cfg.carrierNIF || '');
     updateNumPreview();
 };
 
@@ -2311,6 +2465,7 @@ window.newCMR = window.doNewCMR = function() {
     clearSig(); clearSigSender();
     sv('docNum', genDocNum());
     sv('docDate', new Date().toISOString().split('T')[0]);
+    sv('dateTransport', new Date().toISOString().split('T')[0]);
     window._activeTemplateName = ''; window._activeTemplateClient = ''; updateTplBanner();
     window._activeTemplateId = null;
     window._activeRecordId = null;
@@ -2573,7 +2728,7 @@ window.editDrv = async function(id) {
     showBS('Editar conductor',
         `<label style="${l}">Nombre:</label><input id="${iName}" type="text" value="${(d.name || '').replace(/"/g, '&quot;')}" style="${s}"/>
          <label style="${l}">DNI Conductor:</label><input id="${iDNI}" type="text" value="${(d.dni || '').replace(/"/g, '&quot;')}" style="${s}" placeholder="12345678X"/>
-         <label style="${l}">Matrícula tractora:</label><input id="${iTrac}" type="text" value="${(d.tractor || '').replace(/"/g, '&quot;')}" style="${s}"/>
+         <label style="${l}">Matrícula del vehículo tractor:</label><input id="${iTrac}" type="text" value="${(d.tractor || '').replace(/"/g, '&quot;')}" style="${s}"/>
          <label style="${l}">Matrícula semirremolque:</label><input id="${iTrail}" type="text" value="${(d.trailer || '').replace(/"/g, '&quot;')}" style="${s.replace('margin-bottom:8px', '')}"/>`,
         [
             { label: 'Cancelar', cls: 'cancel', fn: closeBS },
@@ -2984,8 +3139,8 @@ window.renderHist = async function() {
     document.getElementById('st3').textContent = monthKg > 0 ? (monthKg >= 1000 ? (monthKg / 1000).toFixed(1) + 't' : Math.round(monthKg)) : '—';
 };
 
-window.loadRec = async id => { const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return; fill(r); window._activeTemplateName = r.templateName || ''; window._activeTemplateClient = r.templateClient || ''; window._activeTemplateId = null; window._activeRecordId = r.id; _lastDraftHash = null; clearSig(); clearSigSender(); tab('form'); updateTplBanner(); toast('✓ Documento cargado — se actualizará al regenerar el PDF', 'ok', 4000); };
-window.dupRec  = async id => { const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return; const d = { ...r }; delete d.id; d.docDate = new Date().toISOString().split('T')[0]; d.savedAt = new Date().toISOString(); fill(d); window._activeTemplateName = r.templateName || ''; window._activeTemplateClient = r.templateClient || ''; window._activeTemplateId = null; window._activeRecordId = null; sv('docNum', genDocNum()); clearSig(); clearSigSender(); tab('form'); updateTplBanner(); toast('✓ Duplicado — cambia el albarán para actualizar el N.º', 'warn', 5000); };
+window.loadRec = async id => { const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return; fill(r); window._activeTemplateName = r.templateName || ''; window._activeTemplateClient = r.templateClient || ''; window._activeTemplateId = null; window._activeRecordId = r.id; _lastDraftHash = null; tab('form'); updateTplBanner(); toast('✓ Documento cargado — se actualizará al regenerar el PDF', 'ok', 4000); };
+window.dupRec  = async id => { const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return; const d = { ...r }; delete d.id; d.docDate = new Date().toISOString().split('T')[0]; d.dateTransport = new Date().toISOString().split('T')[0]; d.savedAt = new Date().toISOString(); delete d.sigDriver; delete d.sigSender; delete d.sigRcv; fill(d); window._activeTemplateName = r.templateName || ''; window._activeTemplateClient = r.templateClient || ''; window._activeTemplateId = null; window._activeRecordId = null; sv('docNum', genDocNum()); tab('form'); updateTplBanner(); toast('✓ Duplicado — carga nuevas firmas (las del original no se copian)', 'warn', 5000); };
 window.regenPDF = async function(id) {
     const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return;
     const chosenLayout = await _askPDFLayout(); if (!chosenLayout) return;
@@ -3002,8 +3157,11 @@ window.regenPDF = async function(id) {
             const DECA_REQUIRED = [
                 { id: 'senderNIF',    label: 'NIF Remitente / Cargador',   field: 'senderNIF' },
                 { id: 'carrierNIF',   label: 'NIF Transportista efectivo', field: 'carrierNIF' },
-                { id: 'plateTractor', label: 'Matrícula Tractora',         field: 'plateTractor' },
+                { id: 'plateTractor', label: 'Matrícula del vehículo tractor', field: 'plateTractor' },
+                { id: 'dateTransport',label: 'Fecha de realización del transporte (art. 6.f)', field: 'dateTransport' },
             ];
+            if ((data.conjuntoArticulado || '') === 'SI')
+                DECA_REQUIRED.push({ id: 'plateTrailer', label: 'Matrícula del semirremolque — conjunto articulado (art. 6.g)', field: 'plateTrailer' });
             const decaMissing = DECA_REQUIRED.filter(f => !(data[f.field] || '').trim());
             if (decaMissing.length) {
                 showBS(
@@ -3116,7 +3274,7 @@ window.saveAsTemplate = async function() {
                          { label: 'Sobreescribir', cls: 'danger', fn: () => _tplOverwrite(existing.id) }]);
                     return;
                 }
-                data.templateName = name; data.templateClient = cli.trim(); data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate;
+                data.templateName = name; data.templateClient = cli.trim(); data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate; delete data.dateTransport;
                 await dbAdd(TPL, data); closeBS(); renderTemplates(); toast('✓ Plantilla guardada', 'ok');
             }}
         ]
@@ -3130,7 +3288,7 @@ window._tplOverwrite = async function(id) {
     delete data.sigDriver; delete data.sigSender;
     const name = window._pendingTplName || data.templateName || '';
     const cli  = window._pendingTplCli !== undefined ? window._pendingTplCli : (data.templateClient || '');
-    data.templateName = name; data.templateClient = cli; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate;
+    data.templateName = name; data.templateClient = cli; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate; delete data.dateTransport;
     await dbDel(TPL, id); await dbAdd(TPL, data); renderTemplates(); toast('✓ Plantilla sobreescrita', 'ok');
     delete window._pendingTplData; delete window._pendingTplName; delete window._pendingTplCli;
 };
@@ -3152,7 +3310,7 @@ window._tplRename = async function() {
                 const all = await dbAll(TPL);
                 const dup = all.find(t => (t.templateName || '').trim().toLowerCase() === newName.toLowerCase());
                 if (dup) { toast('Ese nombre también existe, elige otro', 'err', 4000); return; }
-                data.templateName = newName; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate;
+                data.templateName = newName; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate; delete data.dateTransport;
                 await dbAdd(TPL, data); closeBS(); renderTemplates(); toast(`✓ Plantilla guardada como "${newName}"`, 'ok');
                 delete window._pendingTplData; delete window._pendingTplName;
             }}
@@ -3161,14 +3319,14 @@ window._tplRename = async function() {
     setTimeout(() => { const inp = document.getElementById(inputId); if (inp) { inp.focus(); inp.select(); } }, 80);
 };
 
-window.loadTemplate   = async id => { const all = await dbAll(TPL); const tpl = all.find(x => x.id == id); if (!tpl) return; fill(tpl); sv('docNum', genDocNum()); sv('docDate', new Date().toISOString().split('T')[0]); window._activeTemplateName = tpl.templateName || ''; window._activeTemplateClient = tpl.templateClient || ''; window._activeTemplateId = tpl.id; window._activeRecordId = null; _lastDraftHash = null; tab('form'); updateTplBanner(); toast('✓ Plantilla cargada — los cambios se guardarán en ella automáticamente', 'ok', 4000); };
+window.loadTemplate   = async id => { const all = await dbAll(TPL); const tpl = all.find(x => x.id == id); if (!tpl) return; fill(tpl); sv('docNum', genDocNum()); sv('docDate', new Date().toISOString().split('T')[0]); sv('dateTransport', new Date().toISOString().split('T')[0]); window._activeTemplateName = tpl.templateName || ''; window._activeTemplateClient = tpl.templateClient || ''; window._activeTemplateId = tpl.id; window._activeRecordId = null; _lastDraftHash = null; tab('form'); updateTplBanner(); toast('✓ Plantilla cargada — los cambios se guardarán en ella automáticamente', 'ok', 4000); };
 window.updateTemplate = async function(id) {
     const all = await dbAll(TPL); const tpl = all.find(x => x.id == id); if (!tpl) return;
     showBS('Actualizar plantilla', `<p>Se sobreescribirá <b>${tpl.templateName}</b> con los datos actuales del formulario.</p>`,
         [{ label: 'Cancelar', cls: 'cancel', fn: closeBS },
          { label: 'Actualizar', cls: 'ok', fn: async () => {
              closeBS(); const data = collect(); delete data.sigDriver; delete data.sigSender;
-             data.templateName = tpl.templateName; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate;
+             data.templateName = tpl.templateName; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate; delete data.dateTransport;
              await dbDel(TPL, id); await dbAdd(TPL, data); renderTemplates(); toast('✓ Plantilla actualizada', 'ok');
          }}]
     );
@@ -3362,16 +3520,16 @@ window.renderTemplates = async function() {
 
 // ── Backup / Restore ──────────────────────────────────────────
 window.exportDB = async function() {
-    const [docs, agenda, plantillas] = await Promise.all([dbAll(STORE), dbAll(AG), dbAll(TPL)]);
-    if (!docs.length && !agenda.length && !plantillas.length) { toast('No hay datos para exportar', 'warn'); return; }
-    const backup = { _version: 1, _exportedAt: new Date().toISOString(), _app: 'CMR Manager Pro', docs, agenda, plantillas };
+    const [docs, agenda, plantillas, decas] = await Promise.all([dbAll(STORE), dbAll(AG), dbAll(TPL), _idbAll(DECA)]);
+    if (!docs.length && !agenda.length && !plantillas.length && !decas.length) { toast('No hay datos para exportar', 'warn'); return; }
+    const backup = { _version: 2, _exportedAt: new Date().toISOString(), _app: 'CMR Manager Pro', docs, agenda, plantillas, decas };
     const b = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     const u = URL.createObjectURL(b);
     const a = document.createElement('a');
     a.href = u; a.download = 'CMR_Backup_' + new Date().toISOString().slice(0, 10) + '.json';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(u), 10000);
-    toast(`✓ Backup exportado: ${docs.length} docs, ${agenda.length} agenda, ${plantillas.length} plantillas`, 'ok');
+    toast(`✓ Backup exportado: ${docs.length} docs, ${agenda.length} agenda, ${plantillas.length} plantillas, ${decas.length} DeCA`, 'ok');
 };
 
 window.importClick = () => document.getElementById('importInput').click();
@@ -3381,38 +3539,39 @@ window.importDB = async function(e) {
     const t = await f.text();
     try {
         const parsed = JSON.parse(t);
-        let docsArr = [], agendaArr = [], plantillasArr = [];
+        let docsArr = [], agendaArr = [], plantillasArr = [], decasArr = [];
         if (Array.isArray(parsed))     { docsArr = parsed; }
-        else if (parsed._version)      { docsArr = parsed.docs || []; agendaArr = parsed.agenda || []; plantillasArr = parsed.plantillas || []; }
+        else if (parsed._version)      { docsArr = parsed.docs || []; agendaArr = parsed.agenda || []; plantillasArr = parsed.plantillas || []; decasArr = parsed.decas || []; }
         else                           { throw new Error('Formato de backup no reconocido'); }
         showBS('Importar Backup',
-            `<p style="margin-bottom:10px">Se importarán:</p><ul style="padding-left:16px;line-height:2"><li><b>${docsArr.length}</b> documentos</li><li><b>${agendaArr.length}</b> contactos de agenda</li><li><b>${plantillasArr.length}</b> plantillas</li></ul>`,
+            `<p style="margin-bottom:10px">Se importarán:</p><ul style="padding-left:16px;line-height:2"><li><b>${docsArr.length}</b> documentos</li><li><b>${agendaArr.length}</b> contactos de agenda</li><li><b>${plantillasArr.length}</b> plantillas</li><li><b>${decasArr.length}</b> registros DeCA</li></ul>`,
             [{ label: 'Cancelar', cls: 'cancel', fn: closeBS }, { label: 'Importar', cls: 'ok', fn: () => _doImport() }]
         );
-        window._pendingImport = { d: docsArr, a: agendaArr, p: plantillasArr };
+        window._pendingImport = { d: docsArr, a: agendaArr, p: plantillasArr, x: decasArr };
     } catch (err) { toast('JSON inválido: ' + err.message, 'err'); }
     e.target.value = '';
 };
 
 window._doImport = async function() {
     closeBS(); const data = window._pendingImport; if (!data) return;
-    let counts = { d: 0, a: 0, p: 0 };
+    let counts = { d: 0, a: 0, p: 0, x: 0 };
     for (const r of data.d) { const rec = { ...r }; delete rec.id; await dbAdd(STORE, rec); counts.d++; }
     for (const r of data.a) { const rec = { ...r }; delete rec.id; await dbAdd(AG, rec);    counts.a++; }
     for (const r of data.p) { const rec = { ...r }; delete rec.id; await dbAdd(TPL, rec);   counts.p++; }
+    for (const r of (data.x || [])) { const rec = { ...r }; delete rec.id; await _idbAdd(DECA, rec); counts.x++; }
     delete window._pendingImport;
-    await updateHistBadge(); toast(`✓ Importados: ${counts.d} docs, ${counts.a} agenda, ${counts.p} plantillas`, 'ok');
-    await updateBackupStats();
+    await updateHistBadge(); toast(`✓ Importados: ${counts.d} docs, ${counts.a} agenda, ${counts.p} plantillas, ${counts.x} DeCA`, 'ok');
+    await updateBackupStats(); renderDecaLog();
 };
 
 window.updateBackupStats = async function() {
     const el = document.getElementById('backup-stats'); if (!el) return;
-    const [docs, agenda] = await Promise.all([dbAll(STORE), dbAll(AG)]);
-    el.textContent = `${docs.length} documentos · ${agenda.length} contactos en agenda`;
+    const [docs, agenda, decas] = await Promise.all([dbAll(STORE), dbAll(AG), _idbAll(DECA)]);
+    el.textContent = `${docs.length} documentos · ${agenda.length} contactos en agenda · ${decas.length} DeCA`;
 };
 
-window.confirmClear = () => { showBS('Vaciar Base de Datos', 'Se eliminarán TODOS los documentos.', [{ label: 'Cancelar', cls: 'cancel', fn: closeBS }, { label: 'Vaciar BD', cls: 'danger', fn: _clearOk }]); };
-window._clearOk = async function() { closeBS(); await dbClear(STORE); await renderHist(); if (window.renderHoy) await renderHoy(); if (window.renderAyer) await renderAyer(); if (window.renderManana) await renderManana(); await updateHistBadge(); toast('BD vaciada', 'warn'); };
+window.confirmClear = () => { showBS('Vaciar Base de Datos', 'Se eliminarán TODOS los documentos y registros DeCA.', [{ label: 'Cancelar', cls: 'cancel', fn: closeBS }, { label: 'Vaciar BD', cls: 'danger', fn: _clearOk }]); };
+window._clearOk = async function() { closeBS(); await dbClear(STORE); await _idbClear(DECA); await renderHist(); if (window.renderHoy) await renderHoy(); if (window.renderAyer) await renderAyer(); if (window.renderManana) await renderManana(); await updateHistBadge(); toast('BD vaciada', 'warn'); await updateBackupStats(); renderDecaLog(); };
 
 // ── Borrador helpers (delegan a autosave.js) ──────────────────
 window._restoreDraft = function() {
@@ -3437,7 +3596,7 @@ window._appInit = async function() {
     window.renderManana     = renderManana;
     await updateHistBadge(); renderRcvQF(); renderDrvQF(); renderCarQF(); renderPackingQF();
     if (window._attachAutosaveListeners) window._attachAutosaveListeners();
-    await updateBackupStats();
+    await updateBackupStats(); renderDecaLog();
 
     const draft = loadDraft();
     if (draft && draft.docNum) {
@@ -3470,6 +3629,10 @@ async function _sharePDF(blob, fname, docNum, safetyTimer, deca) {
     window._sharePDFDoc   = docNum;
 
     const canShareNative = !!(navigator.canShare && navigator.share);
+
+    // El DeCA llega como parámetro (compat. con llamadas directas de los
+    // builders) o, si viene de _decaEmitir, se recupera de window._lastDeca.
+    if (!deca && window._lastDeca && window._lastDeca.qrDataURL) deca = window._lastDeca;
 
     // ── Bloque QR DeCA (solo si hay QR definitivo) ──────────────
     const decaQRHtml = (deca && deca.qrDataURL) ? `
@@ -3768,9 +3931,26 @@ async function generateCMR(){
         // puedes seguir editando sin este dato todavía.
         if (decaOpcion === 'definitivo') {
             const DECA_REQUIRED = [
-                { id: 'plateTractor', label: 'Matrícula Tractora' },
+                { id: 'plateTractor', label: 'Matrícula del vehículo tractor' },
+                { id: 'dateTransport', label: 'Fecha de realización del transporte (art. 6.f)' },
             ];
+            // art. 6.g, in fine: en conjunto articulado constan tractor Y semirremolque.
+            if (gv('conjuntoArticulado') === 'SI')
+                DECA_REQUIRED.push({ id: 'plateTrailer', label: 'Matrícula del semirremolque — conjunto articulado (art. 6.g)' });
             const decaMissing = DECA_REQUIRED.filter(f => !gv(f.id));
+
+            // Letra de control incorrecta: el formato es el bueno pero la letra no
+            // cuadra, así que siempre es un error. Un formato desconocido (CIF,
+            // identificador extranjero) no bloquea, solo se avisa.
+            const _nifMal = _nifBlockers();
+            _nifMal.forEach(n => {
+                decaMissing.push({ id: n.id,
+                                   label: n.lbl + ' — letra de control incorrecta (¿' + n.esperado + '?)' });
+                const el = document.getElementById(n.id);
+                if (el) el.classList.add('field-error');
+                _pintarNif(n.id);
+            });
+
             if (decaMissing.length) {
                 decaMissing.forEach(f => { const el = document.getElementById(f.id); if (el) el.classList.add('field-error'); });
                 tab('form');
@@ -3880,6 +4060,7 @@ function mergeSignatureAndSello(sigDataURL, selloDataURL, w, h) {
 
 // ══ DeCA — Ley 9/2025 de Movilidad Sostenible: QR + subida a Supabase ══
 function _decaPrepare(D) {
+    window._lastDeca = null;
     if (D.tipoDoc !== 'nacional') return null;
     if (!D._decaDefinitivo) return null; // Borrador: sin QR, sin subida, sin UUID
     // Documento definitivo: SIEMPRE un UUID nuevo, nunca se reutiliza uno de
@@ -3913,39 +4094,109 @@ function _decaPrepare(D) {
         }
         qrDataURL = canvas.toDataURL('image/png');
     } catch(e) { console.warn('QR DeCA error:', e); }
-    return { uuid, fname, url, qrDataURL };
+    const _res = { uuid, fname, url, qrDataURL, docNum: D.docNum || '' };
+    window._lastDeca = _res;
+    return _res;
 }
 
-function _decaQRCell(deca, isNacional, sinDeca) {
-    if (!deca || !deca.qrDataURL) {
-        // Modo "sin DeCA": casilla vacía sin ningún aviso — carta de porte normal
-        if (sinDeca) return {text:'', border:[false,false,false,false]};
-        if (isNacional) {
-            // Carta nacional en modo borrador: aviso visible para distinguirla de un DeCA válido.
-            return {
-                stack: [
-                    {text:'BORRADOR', fontSize:7, bold:true, color:'#b91c1c', alignment:'center', margin:[0,8,0,2]},
-                    {text:'Sin DeCA emitido — no válido como documento de control', fontSize:4.6, color:'#b91c1c', alignment:'center', margin:[2,0,2,8]}
-                ],
-                border:[true,true,true,true], fillColor:'#fef2f2'
-            };
-        }
-        return {text:'', border:[false,false,false,false]};
-    }
-    return {
-        stack: [
-            {text:'DeCA · Control Administrativo', fontSize:5, bold:true, color:'#666', margin:[0,0,0,2], alignment:'center'},
-            {image: deca.qrDataURL, width:48, height:48, alignment:'center'},
-            {text:'Ley 9/2025 Movilidad Sostenible', fontSize:4.3, color:'#999', alignment:'center', margin:[0,2,0,0]}
-        ],
-        border:[true,true,true,true], fillColor:'#fff'
-    };
+// Datos del art. 6 de la Orden FOM/2861/2012 que la carta de porte no
+// recoge en ninguna otra casilla: la autorización especial de circulación
+// y la constancia de cambio de vehículo.
+function _decaArt6Extra(D) {
+    const out = [];
+    if (D.authEspecial)
+        out.push({text:'Autorización especial de circulación: ' + D.authEspecial, fontSize:6.5, color:'#000', margin:[4,0,4,0]});
+    if (D.cambioVehiculo)
+        out.push({text:'Cambio de vehículo: ' + D.cambioVehiculo, fontSize:6.5, color:'#000', margin:[4,0,4,0]});
+    return out;
 }
+
+// ---- Registro DeCA ----
+// La Resolución de 5/6/2026 obliga a que la aplicación registre la fecha y
+// hora de creación del fichero y, si el documento se modifica durante el
+// servicio, también la de esa modificación. Guardamos una entrada por
+// emisión, encadenando por número de documento: la 2ª emisión del mismo
+// documento es una modificación de la 1ª, no un documento nuevo.
+async function _decaLog(deca, docNum) {
+    try {
+        // La versión anterior es la de mayor número, no la primera encontrada:
+        // con v1 y v2 ya emitidas, .find() devolvería v1 y se reutilizaría su
+        // versión, encadenando siempre contra el documento original.
+        const previo = (await _idbAll(DECA))
+            .filter(r => r.docNum === docNum)
+            .sort((a, b) => (b.version || 0) - (a.version || 0))[0] || null;
+        const now  = new Date();
+        const rec  = {
+            uuid:          deca.uuid,
+            fname:         deca.fname,
+            url:           deca.url,
+            docNum:        docNum,
+            tipoDoc:       'nacional',
+            version:       previo ? previo.version + 1 : 1,
+            esModificacion: !!previo,
+            anteriorUuid:  previo ? previo.uuid : null,
+            fechaCreacion: previo ? previo.fechaCreacion : now.toISOString(),
+            fechaModificacion: previo ? now.toISOString() : null,
+            emitido:       now.toISOString()
+        };
+        const id = await _idbAdd(DECA, rec);
+        rec.id = id;
+        return rec;
+    } catch (e) {
+        console.warn('Registro DeCA:', e);
+        return null;
+    }
+}
+
+window.renderDecaLog = function() {
+    const box = document.getElementById('decaLogList');
+    if (!box) return;
+    _idbAll(DECA).then(rows => {
+        if (!rows.length) {
+            box.innerHTML = '<div class="hist-empty" style="padding:20px 0">Aún no se ha emitido ningún DeCA</div>';
+            return;
+        }
+        const fmt = iso => {
+            if (!iso) return '—';
+            const d = new Date(iso);
+            return isNaN(d) ? iso : d.toLocaleString('es-ES');
+        };
+        // docNum llega de la app pero puede venir de una plantilla importada,
+        // así que se escapa antes de meterlo en innerHTML.
+        const esc = s => String(s == null ? '' : s)
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        box.innerHTML = rows.map(r => `
+            <div class="hitem" style="align-items:flex-start">
+                <div class="hico">🔲</div>
+                <div class="hinfo">
+                    <div class="hnum">${esc(r.docNum) || '—'}
+                        <span class="hwbadge" style="${r.esModificacion ? 'background:rgba(146,64,14,.12);border-color:rgba(146,64,14,.3);color:var(--amber-l)' : ''}">v${r.version}</span>
+                        ${r.esModificacion ? '<span class="hwbadge" style="background:rgba(146,64,14,.12);border-color:rgba(146,64,14,.3);color:var(--amber-l)">modificación</span>' : ''}
+                    </div>
+                    <div class="hsub" title="${esc(r.url)}">${esc(r.fname)}</div>
+                    <div style="font-size:.62rem;color:var(--dim);margin-top:3px;font-family:'JetBrains Mono',monospace">
+                        Creado: ${fmt(r.fechaCreacion)}<br>
+                        ${r.esModificacion ? 'Modificado: ' + fmt(r.fechaModificacion) : 'Modificado: —'}
+                    </div>
+                </div>
+                <div class="hacts">
+                    <a class="hb pd" href="${r.url}" target="_blank" rel="noopener" title="Abrir PDF">↗</a>
+                </div>
+            </div>`).join('');
+    }).catch(e => {
+        box.innerHTML = '<div class="hist-empty" style="padding:20px 0;color:var(--rose-l)">No se pudo leer el registro</div>';
+    });
+};
 
 async function _decaSubirPDF(blob, deca) {
-    if (!deca) return { ok:true };
-    try {
-        if (blob.size > 4.5*1024*1024) toast('⚠ PDF DeCA pesa más de 4.5MB, revisa el contenido','err',5000);
+    if (!deca) return { ok:true };    try {
+        if (blob.size > 5*1024*1024) {
+            toast('⚠ PDF DeCA supera 5 MB — no válido, no se publica','err',6000);
+            alert('El PDF pesa ' + (blob.size/1048576).toFixed(2) + ' MB. La Resolución de 5/6/2026 limita el DeCA a 5 MB, así que NO se ha publicado.\n\nReduce el tamaño (logo, sello o firma más pequeños) y vuelve a emitirlo.');
+            return { ok:false, error:new Error('PDF > 5 MB') };
+        }
+        if (blob.size > 4.5*1024*1024) toast('⚠ PDF DeCA cerca del límite de 5 MB','err',5000);
         const endpoint = window.SUPA_URL + '/storage/v1/object/' + window.SUPA_BUCKET + '/' + deca.fname;
         const key = window.SUPA_ANON_LEGACY || window.SUPA_KEY;
         const resp = await fetch(endpoint, {
@@ -3964,7 +4215,10 @@ async function _decaSubirPDF(blob, deca) {
             const errTxt = await resp.text().catch(()=>resp.statusText);
             throw new Error('HTTP ' + resp.status + ': ' + errTxt);
         }
-        return { ok:true };
+        // Solo se registra si el fichero está realmente publicado: el registro
+        // da fe de la fecha de creación, y no puede haberlo si no se subió.
+        const reg = await _decaLog(deca, deca.docNum);
+        return { ok:true, registro: reg };
     } catch(e) {
         console.error('Error subiendo DeCA:', e);
         const fullMsg = 'DeCA upload error\nEndpoint: ' + window.SUPA_URL + '/storage/v1/object/' + window.SUPA_BUCKET + '/' + deca.fname + '\n\n' + (e.message||e);
@@ -3974,11 +4228,31 @@ async function _decaSubirPDF(blob, deca) {
     }
 }
 
+// Publica el DeCA y sólo después entrega el PDF. El QR va impreso dentro del
+// documento, así que si la subida falla el usuario recibiría un PDF con un
+// código que apunta a un 404 y un fichero que no consta en el registro: no es
+// un DeCA válido. Antes es preferible no entregar nada y avisar.
+function _decaEmitir(blob, deca, fname, docNum, safetyTimer) {
+    if (!deca) { _sharePDF(blob, fname, docNum, safetyTimer); return; }
+    _decaSubirPDF(blob, deca).then(res => {
+        if (res.ok) {
+            _sharePDF(blob, fname, docNum, safetyTimer);
+            toast(res.registro && res.registro.esModificacion
+                ? '✓ DeCA modificado y publicado (v' + res.registro.version + ')'
+                : '✓ DeCA publicado online', 'ok', 3500);
+        } else {
+            clearTimeout(safetyTimer);
+            showOv(false);
+            toast('⚠ Sin DeCA no se entrega el PDF: el QR apuntaría a un enlace inexistente. Revisa el aviso y vuelve a emitir.', 'err', 9000);
+        }
+    });
+}
+
 function buildPDF(D,safetyTimer){
     const isNacional = D.tipoDoc === 'nacional';
     const deca = _decaPrepare(D);
     const num=D.docNum||'CMR-'+Date.now();
-    const dateStr=fmtD(D.docDate); const delivStr=fmtD(D.dateDelivery);
+    const dateStr=fmtD(D.docDate); const delivStr=fmtD(D.dateDelivery); const transStr=fmtD(D.dateTransport||D.docDate);
     const senderBlock=(D.senderBlock||'—')+(isNacional&&D.senderNIF?'\nNIF: '+D.senderNIF:''); const rcvBlock=D.rcvBlock||'—'; const carrierBlock=(D.carrierBlock||'—')+(isNacional&&D.carrierNIF?'\nNIF: '+D.carrierNIF:'');
 
     const copies = isNacional ? [
@@ -4005,7 +4279,7 @@ function buildPDF(D,safetyTimer){
 3. El retraso en la entrega dará lugar a indemnización si se ha formulado reserva en el momento de la entrega.
 4. Las reclamaciones prescribirán al año, salvo dolo o culpa grave (3 años).
 5. El destinatario deberá manifestar las reservas al tiempo de la entrega o en los siete días siguientes.
-6. La carta de porte deberá ser firmada por remitente, transportista y destinatario.`
+6. La carta de porte acredita el transporte; las firmas que figuren en ella son conformadas a efectos de prueba y no sustituyen, cuando el documento se use con fines contractuales, a la firma electrónica avanzada (AdES) exigible por el Reglamento (UE) 910/2014 (eIDAS).`
         : `Este contrato de transporte se rige por el Convenio relativo al contrato de transporte internacional de mercancías por carretera (CMR), Ginebra, 19 de mayo de 1956, y el Protocolo de 5 de julio de 1978.\n1. El transportista responde de la pérdida total o parcial y de las averías que se produzcan desde el momento de la recepción de la mercancía hasta el de su entrega.\n2. La indemnización no excederá de 8,33 DEG por kilogramo de peso bruto faltante.\n3. El retraso en la entrega sólo dará lugar a indemnización si se ha formulado reserva por escrito.\n4. Las reclamaciones deberán dirigirse al transportista dentro del plazo de un año, o de tres años en caso de dolo o culpa grave.\n5. Los daños y perjuicios que no resulten de la pérdida o avería de la mercancía se limitan al importe del porte.\n6. El destinatario deberá manifestar por escrito al transportista las reservas por pérdidas o averías en el momento de la entrega, o a más tardar en los siete días siguientes.`;
 
     const content=[];
@@ -4028,15 +4302,23 @@ function buildPDF(D,safetyTimer){
         content.push({table:{widths:['*','*'],body:[[boxHdr(1,'Remitente · Sender',senderBlock),boxHdr(2,'Destinatario · Consignee',rcvBlock)]]},layout:lay,margin:[0,0,0,0]});
         content.push(colorLine());
         const spacer=(h)=>({text:'',margin:[0,h,0,0]});
-        content.push({table:{widths:['*','*','auto'],body:[[box(4,'Lugar de carga',D.placeLoading||'—'),(function(){const b=box(3,'Lugar de entrega',D.placeDelivery||'—'); b.stack.push(spacer(30)); return b;})(),box('','Fecha prev. entrega',delivStr)]]},layout:lay,margin:[0,0,0,0]});
+        content.push({table:{widths:['*','*','auto'],body:[[box(4,'Lugar de carga',D.placeLoading||'—'),(function(){const b=box(3,'Lugar de entrega',D.placeDelivery||'—'); b.stack.push(spacer(30)); return b;})(),box('','Fecha transporte / entrega prev.','Transp.: '+transStr+'\nEntrega: '+delivStr)]]},layout:lay,margin:[0,0,0,0]});
         content.push(colorLine());
         content.push({table:{widths:['*','auto'],body:[[box(5,'Docs. anexos / Albarán',D.docsAnexos||'—'),box(14,'Reembolso €',D.codAmount||'')]]},layout:lay,margin:[0,0,0,0]});
-        const platesStr = [D.plateTractor,D.plateTrailer].filter(Boolean).join('  /  ') || '—';
+        // art. 6.g: en conjunto articulado deben constar tractor Y semirremolque
+        // de forma diferenciada, no solo las matrículas una detrás de otra.
+        const platesStr = isNacional
+            ? [D.plateTractor&&('Vehículo tractor: '+D.plateTractor),
+               (D.plateTrailer)&&('Semirremolque: '+D.plateTrailer)]
+              .filter(Boolean).join('   /   ') || '—'
+            : [D.plateTractor,D.plateTrailer].filter(Boolean).join('  /  ') || '—';
         const box16f = (()=>{
             const bdy=[];
             bdy.push({columns:[{text:'16f',fontSize:7,bold:true,color:'#888',width:'auto'},{text:'Conductor · Vehículo',fontSize:6.5,color:'#888',width:'*',alignment:'right'}],margin:[3,2,3,1]});
             if(D.driverName) bdy.push({text:D.driverName,fontSize:10,bold:true,color:'#000',margin:[3,1,3,1]});
             if(D.driverDNI)  bdy.push({text:'DNI: '+D.driverDNI,fontSize:8,color:'#444',margin:[3,0,3,1]});
+            if(isNacional && D.driverCAP)     bdy.push({text:'CAP: '+D.driverCAP,fontSize:8,color:'#444',margin:[3,0,3,1]});
+            if(isNacional && D.driverPermiso) bdy.push({text:'Permiso: válido hasta '+D.driverPermiso,fontSize:8,color:'#444',margin:[3,0,3,1]});
             bdy.push({text:platesStr,fontSize:13,bold:true,color:'#000',characterSpacing:1.5,margin:[3,D.driverName?4:2,3,4]});
             return {stack:bdy,border:[true,true,true,true],fillColor:'#fff',margin:[0,0,0,0]};
         })();
@@ -4118,6 +4400,8 @@ function buildPDF(D,safetyTimer){
             emisionStack.push({columns:[{text:'21',fontSize:6,bold:true,color:'#888',width:'auto'},{text:'Lugar y fecha de emisión',fontSize:5.5,color:'#888',width:'*',alignment:'right'}],margin:[2,1,2,0]});
             const emisionTxt = (D.placeEmission||'—')+(dateStr?' · '+dateStr:'');
             emisionStack.push({text:emisionTxt,fontSize:8.5,bold:true,color:'#000',margin:[2,0,2,0]});
+            const _art6Nac = isNacional ? _decaArt6Extra(D) : [];
+            if (_art6Nac.length) emisionStack.push({stack:_art6Nac,fontSize:6.5,color:'#000',margin:[2,1,2,0]});
             if (showQR) {
                 // Si hay QR real: imagen pequeña a la derecha del texto de emisión
                 if (deca && deca.qrDataURL) {
@@ -4127,6 +4411,7 @@ function buildPDF(D,safetyTimer){
                             {stack:[
                                 {text:'DeCA · Ley 9/2025',fontSize:4.5,color:'#888',alignment:'center',margin:[0,2,0,1]},
                                 {image:deca.qrDataURL,width:36,height:36,alignment:'center'},
+                                {text:'Documento de control. El trazo manuscrito no es firma electrónica AdES.',fontSize:4,color:'#aaa',alignment:'center',margin:[0,1,0,0]}
                             ],width:50}
                         ],margin:[0,2,0,0]
                     });
@@ -4161,9 +4446,15 @@ function buildPDF(D,safetyTimer){
         };
         const carrierFull23=(D.carrierBlock||'').trim();
         const sigDriverCell=()=>{ const hasSig=D.sigDriver&&D.sigDriver.startsWith('data:image'); if(hasSig){ return {stack:[sigHdr23,{text:carrierFull23,fontSize:6,bold:true,color:'#000',lineHeight:1.15,margin:[3,2,3,1]},{image:D.sigDriver,width:100,height:50,alignment:'center',margin:[0,2,0,0]},{text:D.driverName||'',fontSize:6.5,alignment:'center',margin:[0,1,0,2]}],border:[true,true,true,true],fillColor:'#fff'}; } return {stack:[sigHdr23,{text:carrierFull23,fontSize:6,bold:true,color:'#000',lineHeight:1.15,margin:[3,2,3,1]},{text:'',margin:[0,18,0,0]},{text:D.driverName||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,0,0,2]}],border:[true,true,true,true],fillColor:'#fff'}; };
-        const sigConsCell=()=>({stack:[sigHdr24,{text:(D.rcvBlock||'').split('\n')[0]||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,22,0,2]}],border:[true,true,true,true],fillColor:'#fff'});
+        // Casilla 24 — Firma del destinatario (consignatario). En nacional solo se
+        // plasma en la copia del destinatario (ci===1); el CMR internacional se
+        // mantiene como estaba.
+        const sigConsCell=()=>{ const hasSig=isNacional&&D.sigRcv&&D.sigRcv.startsWith('data:image'); if(hasSig){ return {stack:[sigHdr24,{image:D.sigRcv,fit:[110,48],alignment:'center',margin:[0,2,0,0]},{text:(D.rcvBlock||'').split('\n')[0]||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,2,0,2]}],border:[true,true,true,true],fillColor:'#fff'}; } return {stack:[sigHdr24,{text:(D.rcvBlock||'').split('\n')[0]||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,22,0,2]}],border:[true,true,true,true],fillColor:'#fff'}; };
 
-        content.push({table:{widths:['*','*','*'],body:[[sigSenderCell(),sigDriverCell(),sigConsCell()]]},layout:lay,margin:[0,0,0,2]});
+        const _filaSigs=[sigSenderCell(),sigDriverCell()];
+        if(isNacional){ if(ci===1) _filaSigs.push(sigConsCell()); }
+        else { _filaSigs.push(sigConsCell()); }
+        content.push({table:{widths:['*','*',...(isNacional&&ci!==1?[]:['*'])],body:[_filaSigs]},layout:lay,margin:[0,0,0,2]});
 
         // Cláusulas legales: array de párrafos para evitar líneas en blanco, en 2 columnas
         (function(){
@@ -4227,12 +4518,7 @@ function buildPDF(D,safetyTimer){
             }).getBlob(blob=>{
                 clearTimeout(safetyTimer); showOv(false);
                 const fname=(isNacional?'CARTA_PORTE_NAC_':'CMR_')+num.replace(/[^a-z0-9]/gi,'_')+'.pdf';
-                if (deca) {
-                    _decaSubirPDF(blob, deca).then(res=>{
-                        if (res.ok) toast('✓ DeCA publicado online','ok',3500);
-                    });
-                }
-                _sharePDF(blob, fname, num, safetyTimer, deca || null);
+                _decaEmitir(blob, deca, fname, num, safetyTimer);
                 setTimeout(()=>URL.revokeObjectURL(URL.createObjectURL(blob)),30000);
             });
         }catch(pdfErr){ clearTimeout(safetyTimer);showOv(false);toast('⚠ Error: '+pdfErr.message,'err',6000); }
@@ -4352,6 +4638,7 @@ function buildPDF_Classic(D, safetyTimer){
     const num   = D.docNum||'CMR-'+Date.now();
     const fmt   = iso=>{if(!iso)return'';try{return new Date(iso).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'})}catch{return iso}};
     const isNac = D.tipoDoc==='nacional';
+    const deca  = _decaPrepare(D);
     const R='#cc0000', WH='#ffffff', GR='#efefef';
 
     // Each copy gets its own accent colour (header bg + stripe)
@@ -4392,8 +4679,17 @@ function buildPDF_Classic(D, safetyTimer){
         const bodyTxt = (t,fs,bold,margin) => ({text:t||'',fontSize:fs||8.5,bold:!!bold,color:'#000',margin:margin||[3,1,3,3],lineHeight:1.2});
         const sender  = D.senderBlock||'';
         const rcv     = D.rcvBlock||'';
-        const carrier = D.carrierBlock||'';
-        const plates  = [D.plateTractor,D.plateTrailer].filter(Boolean).join(' / ');
+        const carrier = (D.carrierBlock||'') + (isNac
+            ? (D.driverName ? '\nConductor: ' + D.driverName
+                + (D.driverDNI ? ' — DNI: ' + D.driverDNI : '')
+                + (D.driverCAP ? '\nCAP: ' + D.driverCAP : '')
+                + (D.driverPermiso ? '  ·  Permiso hasta: ' + D.driverPermiso : '') : '')
+            : '');
+        const plates  = isNac
+            ? [D.plateTractor&&('Vehículo tractor: '+D.plateTractor),
+               (D.plateTrailer)&&('Semirremolque: '+D.plateTrailer)]
+              .filter(Boolean).join(' / ')
+            : [D.plateTractor,D.plateTrailer].filter(Boolean).join(' / ');
         const deliv   = D.placeDelivery||'';
         const load    = D.placeLoading||'';
         const docs    = D.docsAnexos||'';
@@ -4401,12 +4697,13 @@ function buildPDF_Classic(D, safetyTimer){
         const instr   = D.senderInstr||'';
         const obs     = D.observations||'';
         const dateS   = fmt(D.docDate);
+        const transS   = fmt(D.dateTransport||D.docDate);
         const cod     = D.codAmount||'';
         const payT    = D.freightTerms||'';
         const stipul  = D.specialStipulations||'';
         const succ    = D.successiveCarriers&&D.successiveCarriers.length
             ? D.successiveCarriers.map(s=>s.name+(s.address?'\n'+s.address:'')).join('\n'):'';
-        const loadDate= load+(dateS?'\n'+dateS:'');
+        const loadDate= load+((transS||dateS)?'\n'+(transS||dateS):'');
         const carrFull= carrier;
 
         const gl    = D.goodsLines&&D.goodsLines.length?D.goodsLines:[{}];
@@ -4583,14 +4880,33 @@ function buildPDF_Classic(D, safetyTimer){
 
         // Left cell: instrucciones + forma de pago + lugar emisión
         const emitLoc = D.placeEmission||'';
+        const eLleft = {text:'',border:[false,false,false,false],fillColor:WH};
+        const leftStack = [
+            redLbl('13 Instrucciones del remitente'),
+            bodyTxt(instr,8),
+            {canvas:[{type:'line',x1:0,y1:0,x2:240,y2:0,lineWidth:0.6,lineColor:LC}],margin:[3,4,3,2]},
+            {text:'21 Lugar y fecha de emisión',fontSize:6.5,color:LC,margin:[3,0,3,2]},
+            {text:emitLoc+(dateS?'\n'+dateS:''),fontSize:8,color:'#000',margin:[3,2,3,3]},
+        ];
+        if (isNac) {
+            for (const a of _decaArt6Extra(D)) leftStack.push({...a, fontSize:6, margin:[3,0,3,1]});
+        }
+        if (isNac && deca && deca.qrDataURL) {
+            leftStack.push({
+                columns:[
+                    {text:'',width:'*'},
+                    {stack:[
+                        {text:'DeCA · Ley 9/2025',fontSize:4.5,color:'#888',alignment:'center',margin:[0,2,0,1]},
+                        {image:deca.qrDataURL,width:36,height:36,alignment:'center'},
+                        {text:'Documento de control. El trazo manuscrito no es firma electrónica AdES.',fontSize:4,color:'#aaa',alignment:'center',margin:[0,1,0,0]}
+                    ],width:50}
+                ],margin:[0,4,0,0]
+            });
+        } else if (isNac && !D._decaSinDeca) {
+            leftStack.push({text:'BORRADOR — Sin DeCA emitido',fontSize:5.5,bold:true,color:'#b91c1c',margin:[3,4,3,0]});
+        }
         const leftCell = {
-            stack:[
-                redLbl('13 Instrucciones del remitente'),
-                bodyTxt(instr,8),
-                {canvas:[{type:'line',x1:0,y1:0,x2:240,y2:0,lineWidth:0.6,lineColor:LC}],margin:[3,4,3,2]},
-                {text:'21 Lugar y fecha de emisión',fontSize:6.5,color:LC,margin:[3,0,3,2]},
-                {text:emitLoc+(dateS?'\n'+dateS:''),fontSize:8,color:'#000',margin:[3,2,3,3]},
-            ],
+            stack:leftStack,
             fillColor:WH, border:[true,true,false,true],
             rowSpan:9, margin:[0,0,0,0]
         };
@@ -4644,17 +4960,30 @@ function buildPDF_Classic(D, safetyTimer){
             sigDrvStack.push({text:'',margin:[0,22,0,0]});
         }
         sigDrvStack.push({text:D.driverName||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,0,0,2]});
-        const r7 = {
-            table:{
-                widths:['33%','34%','33%'],
-                heights:[H.sig],
-                body:[[
-                    {stack:sigSndStack,fillColor:WH,border:bA},
-                    {stack:sigDrvStack,fillColor:WH,border:bA},
-                    {stack:[{text:'24 Recibo de la mercancia',fontSize:6.5,color:LC,margin:[4,4,4,5]},{text:'Firma y sello del consignatario',fontSize:6,color:'#aaa',margin:[4,0,4,0]},{text:'',margin:[0,30,0,0]},{text:(D.rcvBlock||'').split('\n')[0]||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,0,0,2]}],fillColor:BL,border:bA},
-                ]]
-            },
-            layout:layR, margin:[0,0,0,0]
+        const sigRcvStack = [
+            {text:'24 Recibo de la mercancia',fontSize:6.5,color:LC,margin:[4,4,4,5]},
+            {text:'Firma y sello del consignatario',fontSize:6,color:'#aaa',margin:[4,0,4,0]},
+        ];
+        if(isNac&&D.sigRcv&&D.sigRcv.startsWith('data:image')){
+            sigRcvStack.push({image:D.sigRcv,width:120,height:55,alignment:'center',margin:[0,4,0,4]});
+        } else {
+            sigRcvStack.push({text:'',margin:[0,30,0,0]});
+        }
+        sigRcvStack.push({text:(D.rcvBlock||'').split('\n')[0]||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,0,0,2]});
+        // La casilla 24 solo va en la copia del consignatario (índice 1) en
+        // nacional, como en el modelo oficial. En CMR se mantiene como estaba.
+        const r7 = ci => {
+            const cells = [{stack:sigSndStack,fillColor:WH,border:bA},
+                           {stack:sigDrvStack,fillColor:WH,border:bA}];
+            if (!isNac || ci === 1) cells.push({stack:sigRcvStack,fillColor:BL,border:bA});
+            return {
+                table:{
+                    widths:cells.map(()=>'33.33%'),
+                    heights:[H.sig],
+                    body:[cells]
+                },
+                layout:layR, margin:[0,0,0,0]
+            };
         };
 
         // ── Footer ──
@@ -4668,7 +4997,7 @@ function buildPDF_Classic(D, safetyTimer){
         // Red horizontal line separator between independent tables
         const rl = {canvas:[{type:'line',x1:0,y1:0,x2:537,y2:0,lineWidth:0.8,lineColor:LC}],margin:[0,0,0,0]};
 
-        allContent.push({margin:[10,0,4,0], stack:[r0,rl,r1,rl,r2,rl,r3,rl,r4,rl,r5,rl,r6,rl,r7,footer]});
+        allContent.push({margin:[10,0,4,0], stack:[r0,rl,r1,rl,r2,rl,r3,rl,r4,rl,r5,rl,r6,rl,r7(ci),footer]});
 
         if(ci<copies.length-1) allContent.push({text:'',pageBreak:'after'});
     });
@@ -4682,7 +5011,7 @@ function buildPDF_Classic(D, safetyTimer){
         }).getBlob(blob=>{
             clearTimeout(safetyTimer); showOv(false);
             const fname='CMR_CLASSIC_'+num.replace(/[^a-z0-9]/gi,'_')+'.pdf';
-            _sharePDF(blob, fname, num, safetyTimer, null);
+            _decaEmitir(blob, deca, fname, num, safetyTimer);
             setTimeout(()=>URL.revokeObjectURL(URL.createObjectURL(blob)),30000);
         });
     }catch(e){
@@ -4697,10 +5026,12 @@ function buildPDF_Classic(D, safetyTimer){
 // ============================================================
 function buildPDF_IncoDocs(D, safetyTimer){
     const isNac = D.tipoDoc === 'nacional';
+    const deca  = _decaPrepare(D);
     const num   = D.docNum || 'CMR-' + Date.now();
     const fmt   = iso => { if(!iso) return ''; try{ return new Date(iso).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'})} catch{return iso} };
     const dateS = fmt(D.docDate);
     const delivS= fmt(D.dateDelivery);
+    const transS= fmt(D.dateTransport||D.docDate);
 
     const BLK = '#1a1009'; const LBL = '#f0ece4'; const BDR = '#a09888';
     const ACC = '#c4421a'; const WH  = '#ffffff';
@@ -4748,15 +5079,24 @@ function buildPDF_IncoDocs(D, safetyTimer){
         content.push({table:{widths:['50%','50%'],body:[[field('1  Remitente / Sender',D.senderBlock||'',{fs:8,bold:true}),field('2  Destinatario / Consignee',D.rcvBlock||'',{fs:8,bold:true})]]},layout:lay,margin:[0,0,0,2]});
 
         // Lugar entrega / carga / fecha
-        content.push({table:{widths:['50%','25%','25%'],body:[[field('3  Lugar de entrega / Place of Delivery',D.placeDelivery||''),field('4  Lugar de carga / Place of Loading',D.placeLoading||''),field('Fecha entrega prevista',delivS)]]},layout:lay,margin:[0,0,0,2]});
+        content.push({table:{widths:['50%','25%','25%'],body:[[field('3  Lugar de entrega / Place of Delivery',D.placeDelivery||''),field('4  Lugar de carga / Place of Loading',D.placeLoading||''),field('Fecha transporte / entrega prev.','Transp.: '+(transS||'—')+'\nEntrega: '+(delivS||'—'))]]},layout:lay,margin:[0,0,0,2]});
 
         // Docs / Ref / Franqueo
         const freightStr=(D.freightTerms||'')+(D.codAmount?' — Reembolso: '+D.codAmount+' €':'');
         content.push({table:{widths:['40%','35%','25%'],body:[[field('5  Documentos anexos',D.docsAnexos||''),field('Referencia cliente',D.clientRef||''),field('14  Franqueo',freightStr)]]},layout:lay,margin:[0,0,0,2]});
 
         // Transportista
-        const platesStr=[D.plateTractor,D.plateTrailer].filter(Boolean).join('  /  ');
-        const carrierBaseVal=(D.carrierBlock||'')+(D.driverName?'\nConductor: '+D.driverName+(D.driverDNI?' — DNI: '+D.driverDNI:''):'');
+        const platesStr=isNac
+            ? [D.plateTractor&&('Vehículo tractor: '+D.plateTractor),
+               (D.plateTrailer)&&('Semirremolque: '+D.plateTrailer)]
+              .filter(Boolean).join('  /  ')
+            : [D.plateTractor,D.plateTrailer].filter(Boolean).join('  /  ');
+        const driverExtra=[];
+        if(isNac&&D.driverName&&D.driverCAP)      driverExtra.push('CAP '+D.driverCAP);
+        if(isNac&&D.driverName&&D.driverPermiso) driverExtra.push('Permiso hasta '+D.driverPermiso);
+        const carrierBaseVal=(D.carrierBlock||'')
+            +(D.driverName?'\nConductor: '+D.driverName+(D.driverDNI?' — DNI: '+D.driverDNI:'')
+              +(driverExtra.length?'\n'+driverExtra.join('  ·  '):''):'');
         const carrierCell16 = { stack:[
             {text:'16  Transportista / Carrier', fontSize:6.5, color:'#7a6a58', bold:false, margin:[4,4,4,2]},
             {text:carrierBaseVal||'', fontSize:8, bold:false, color:BLK, margin:[4,0,4,2], lineHeight:1.3},
@@ -4789,7 +5129,7 @@ function buildPDF_IncoDocs(D, safetyTimer){
 
         // Instrucciones / Estipulaciones / Emisión — anclado al fondo
         const cl = isNac
-            ? `Este contrato se rige por la Ley 15/2009 del contrato de transporte terrestre de mercancías y la Orden FOM/1882/2012. 1. El porteador responde de la pérdida total o parcial y de las averías desde la recepción hasta la entrega. 2. La indemnización por pérdida o avería no excederá del valor de mercado de la mercancía o 1/3 del IPREM por kilogramo. 3. El retraso en la entrega dará lugar a indemnización si se ha formulado reserva en el momento de la entrega. 4. Las reclamaciones prescribirán al año, salvo dolo o culpa grave (3 años). 5. El destinatario deberá manifestar las reservas en el momento de la entrega o dentro de los siete días siguientes. 6. La carta de porte deberá ser firmada por remitente, transportista y destinatario.`
+            ? `Este contrato se rige por la Ley 15/2009 del contrato de transporte terrestre de mercancías y la Orden FOM/1882/2012. 1. El porteador responde de la pérdida total o parcial y de las averías desde la recepción hasta la entrega. 2. La indemnización por pérdida o avería no excederá del valor de mercado de la mercancía o 1/3 del IPREM por kilogramo. 3. El retraso en la entrega dará lugar a indemnización si se ha formulado reserva en el momento de la entrega. 4. Las reclamaciones prescribirán al año, salvo dolo o culpa grave (3 años). 5. El destinatario deberá manifestar las reservas en el momento de la entrega o dentro de los siete días siguientes. 6. La carta de porte acredita el transporte; las firmas que figuren en ella son conformadas a efectos de prueba y no sustituyen, cuando el documento se use con fines contractuales, a la firma electrónica avanzada (AdES) exigible por el Reglamento (UE) 910/2014 (eIDAS).`
             : `Este contrato se rige por el Convenio CMR (Ginebra, 19 mayo 1956) y el Protocolo de 5 julio 1978. 1. El transportista responde de la pérdida total o parcial y de las averías desde la recepción hasta la entrega. 2. La indemnización no excederá de 8,33 DEG por kilogramo de peso bruto faltante. 3. El retraso sólo dará lugar a indemnización si se ha formulado reserva por escrito. 4. Las reclamaciones deberán dirigirse al transportista en el plazo de 1 año (3 años en caso de dolo o culpa grave). 5. Los daños no derivados de pérdida o avería se limitan al importe del porte. 6. El destinatario deberá manifestar reservas por escrito en el momento de la entrega o a más tardar en los 7 días siguientes.`;
         const sigH=72;
 
@@ -4803,6 +5143,18 @@ function buildPDF_IncoDocs(D, safetyTimer){
                     {stack:[
                         {text:'21  Lugar y fecha de emisión',fontSize:6.5,color:'#7a6a58',margin:[4,4,4,2]},
                         {text:(D.placeEmission||'')+(dateS?'\n'+dateS:''),fontSize:9,color:BLK,margin:[4,0,4,3]},
+                        ...(isNac ? _decaArt6Extra(D).map(a => ({...a, fontSize:6, margin:[4,0,4,1]})) : []),
+                        ...(isNac && deca && deca.qrDataURL ? [{
+                            columns:[
+                                {text:'',width:'*'},
+                                {stack:[
+                                    {text:'DeCA · Ley 9/2025',fontSize:4.5,color:'#888',alignment:'center',margin:[0,2,0,1]},
+                                    {image:deca.qrDataURL,width:36,height:36,alignment:'center'},
+                                    {text:'Documento de control. El trazo manuscrito no es firma electrónica AdES.',fontSize:4,color:'#aaa',alignment:'center',margin:[0,1,0,0]},
+                                ],width:50}
+                            ],margin:[0,4,0,0]
+                        }] : []),
+                        ...(isNac && !deca?.qrDataURL && !D._decaSinDeca ? [{text:'BORRADOR — Sin DeCA emitido',fontSize:5.5,bold:true,color:'#b91c1c',margin:[4,4,4,0]}] : []),
                         {canvas:[{type:'line',x1:4,y1:0,x2:120,y2:0,lineWidth:0.8,lineColor:BDR}],margin:[0,3,0,3]},
                         {text:'18  Reservas / Observations',fontSize:6.5,color:'#7a6a58',margin:[4,0,4,2]},
                         {text:D.observations||'',fontSize:8,color:BLK,margin:[4,0,4,4]}
@@ -4821,7 +5173,9 @@ function buildPDF_IncoDocs(D, safetyTimer){
                         return{stack:st,fillColor:WH,border:[true,true,true,true],minHeight:sigH};
                     })(),
                     (()=>{const _carrierFullInco=(D.carrierBlock||'').trim(); const st=[{text:'23  Transportista / Carrier',fontSize:7,bold:true,color:cp.color,margin:[4,4,4,2]},{text:'Firma y sello',fontSize:6,color:'#b0a090',margin:[4,0,4,2]}];if(_carrierFullInco) st.push({text:_carrierFullInco,fontSize:6,bold:true,color:'#000',lineHeight:1.15,margin:[4,0,4,4]});if(D.sigDriver&&D.sigDriver.startsWith('data:image')){st.push({image:D.sigDriver,width:100,height:38,alignment:'center',margin:[0,2,0,4]});}else{st.push({text:'',margin:[4,Math.max(sigH-(_carrierFullInco?56:32),10),4,0]});}st.push({text:D.driverName||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,0,0,2]});return{stack:st,fillColor:WH,border:[true,true,true,true],minHeight:sigH};})(),
-                    {stack:[{text:'24  Destinatario / Consignee',fontSize:7,bold:true,color:cp.color,margin:[4,4,4,2]},{text:'Firma y sello (en entrega)',fontSize:6,color:'#b0a090',margin:[4,0,4,8]},{text:'',margin:[4,sigH-32,4,0]},{text:(D.rcvBlock||'').split('\n')[0]||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,0,0,2]}],fillColor:WH,border:[true,true,true,true],minHeight:sigH}
+                    // Casilla 24 (destinatario): en nacional solo en la copia del
+                    // consignatario (índice 1). En CMR internacional se mantiene.
+                    ...((!isNac || ci === 1) ? [(()=>{const st=[{text:'24  Destinatario / Consignee',fontSize:7,bold:true,color:cp.color,margin:[4,4,4,2]},{text:'Firma y sello (en entrega)',fontSize:6,color:'#b0a090',margin:[4,0,4,8]}];if(isNac&&D.sigRcv&&D.sigRcv.startsWith('data:image')){st.push({image:D.sigRcv,fit:[100,40],alignment:'center',margin:[0,2,0,2]});}else{st.push({text:'',margin:[4,sigH-32,4,0]});}st.push({text:(D.rcvBlock||'').split('\n')[0]||'',fontSize:6.5,alignment:'center',color:'#888',margin:[0,0,0,2]});return{stack:st,fillColor:WH,border:[true,true,true,true],minHeight:sigH};})()] : [])
                 ]]},layout:lay,margin:[0,0,0,2]},
                 // Cláusulas
                 {table:{widths:['*'],body:[[{stack:[
@@ -4849,7 +5203,7 @@ function buildPDF_IncoDocs(D, safetyTimer){
         }).getBlob(blob=>{
             clearTimeout(safetyTimer);showOv(false);
             const fname='CMR_INCODOCS_'+num.replace(/[^a-z0-9]/gi,'_')+'.pdf';
-            _sharePDF(blob, fname, num, safetyTimer, null);
+            _decaEmitir(blob, deca, fname, num, safetyTimer);
         });
     }catch(e){clearTimeout(safetyTimer);showOv(false);toast('⚠ Error: '+e.message,'err',6000);}
 }
