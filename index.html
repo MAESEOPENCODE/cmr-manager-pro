@@ -1298,6 +1298,20 @@ select {
 .day-search-row input:focus { border-color: var(--blue-l); box-shadow: 0 0 0 2px rgba(224,98,30,.18); }
 .day-search-row input::placeholder { color: var(--dim); }
 
+
+/* ── Vista Conductor ── */
+.cd-h{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;color:var(--dim);margin:4px 0 12px}
+.cd-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:14px;padding:16px;margin-bottom:14px}
+.cd-num{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--dim)}
+.cd-route{font-size:1.25rem;font-weight:800;margin:6px 0 2px;line-height:1.25}
+.cd-goods{font-size:.95rem;margin-top:8px}
+.cd-btn{display:block;width:100%;padding:15px;margin-top:10px;border-radius:12px;border:1px solid var(--bg4);background:var(--bg3);font:inherit;font-weight:800;font-size:.9rem;color:inherit;text-align:center;text-decoration:none;cursor:pointer}
+.cd-btn.main{background:var(--blue-l);border-color:var(--blue-l);color:#fff}
+.cd-btn.off{opacity:.45;pointer-events:none}
+.cd-warn{font-size:.72rem;color:var(--amber);margin-top:10px}
+#cd-qr{position:fixed;inset:0;z-index:9999;background:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#000}
+#cd-qr img{width:min(88vw,88vh);height:auto;image-rendering:pixelated}
+#cd-qr button{margin-top:18px;padding:14px 32px;border-radius:12px;border:0;background:#111;color:#fff;font:inherit;font-weight:800}
 </style>
 </head>
 <body>
@@ -1379,6 +1393,7 @@ select {
         <div class="tab"        role="tab" tabindex="0" aria-selected="false" aria-controls="panel-tmpl"   data-p="tmpl"   onclick="tab('tmpl')"   onkeydown="if(event.key==='Enter'||event.key===' ')tab('tmpl')">Plantillas</div>
         <div class="tab"        role="tab" tabindex="0" aria-selected="false" aria-controls="panel-hist"   data-p="hist"   onclick="tab('hist')"   onkeydown="if(event.key==='Enter'||event.key===' ')tab('hist')">Historial <span class="tbadge" id="histBadge" aria-label="Total CMR guardados">0</span></div>
         <div class="tab"        role="tab" tabindex="0" aria-selected="false" aria-controls="panel-cfg"    data-p="cfg"    onclick="tab('cfg')"    onkeydown="if(event.key==='Enter'||event.key===' ')tab('cfg')">Config</div>
+        <div class="tab" role="tab" tabindex="0" aria-selected="false" aria-controls="panel-cond" data-p="cond" onclick="tab('cond')" onkeydown="if(event.key==='Enter'||event.key===' ')tab('cond')">🚛 Conductor</div>
     </div>
 
     <!-- ── Panel: Documento ── -->
@@ -1417,9 +1432,10 @@ select {
         <div class="block"><div class="bhead"><span class="btag g">3 · 4 · 5</span><span class="btitle">Recogida y Entrega</span></div><div class="bbody">
             <div class="fr"><label for="placeLoading">Lugar de Carga</label><input id="placeLoading" type="text" placeholder="Polígono Industrial Norte, Sevilla"/></div>
             <div class="fr"><label for="placeDelivery">Lugar de Entrega</label><input id="placeDelivery" type="text" placeholder="Almacén Central, Berlín"/></div>
-<div class="fr2">
-                <div class="fr"><label for="docDate">Fecha de emisión</label><input id="docDate" type="date"/></div>
-                <div class="fr"><label for="dateTransport">Fecha de realización del transporte <span style="font-size:.6rem;color:var(--dim);font-weight:400">(Ley 9/2025 · DeCA)</span></label><input id="dateTransport" type="date"/></div>
+<div class="fr"><label for="dateTransport">Fecha de realización del transporte <span style="font-size:.6rem;color:var(--dim);font-weight:400">(Ley 9/2025 · DeCA)</span></label><input id="dateTransport" type="date"/></div>
+            <div class="fr2">
+                <div class="fr"><label for="dateDelivery">Fecha Prevista Entrega</label><input id="dateDelivery" type="date"/></div>
+                <div class="fr"><label for="clientRef">Referencia Cliente</label><input id="clientRef" type="text" placeholder="PO-2024-XXX"/></div>
             </div>
         </div></div>
 
@@ -1431,7 +1447,7 @@ select {
             <div class="divl"></div>
             <div class="ssep">Vehículo y Conductor</div>
             <div class="qf-row" id="drv-qf"></div>
-            <div class="fr"><label for="driverName">Conductor</label><input id="driverName" type="text" placeholder="Nombre y apellidos"/></div>
+            <div class="fr"><label for="driverName">Conductor</label><input id="driverName" type="text" placeholder="Nombre y apellidos" autocomplete="off" list="driverList" oninput="onDriverInput(this.value)"/><datalist id="driverList"></datalist></div>
             <div class="fr"><label for="driverDNI">DNI Conductor</label><input id="driverDNI" type="text" placeholder="12345678X" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase();" onblur="_pintarNif('driverDNI')" autocomplete="off" spellcheck="false"/></div>
             <div class="fr2">
                 <div class="fr"><label for="driverCAP">CAP Conductor <span style="font-size:.6rem;color:var(--dim);font-weight:400">(art. 6.b Ley 9/2025)</span></label><input id="driverCAP" type="text" placeholder="Nº certificado CAP"/></div>
@@ -1470,6 +1486,20 @@ select {
                 </div>
             </div>
             <div class="qf-row" id="packing-qf" style="margin-top:8px"></div>
+        </div></div>
+
+        <div class="block"><div class="bhead"><span class="btag g">⚖</span><span class="btitle">Pesaje del Vehículo</span></div><div class="bbody">
+            <div class="fr2">
+                <div class="fr"><label for="pesoBruto">Peso Bruto (kg)</label><input id="pesoBruto" type="number" step="1" min="0" placeholder="0" inputmode="numeric" oninput="calcPesoNeto()"/></div>
+                <div class="fr"><label for="taraVehiculo">Tara Vehículo (kg)</label><input id="taraVehiculo" type="number" step="1" min="0" placeholder="0" inputmode="numeric" oninput="calcPesoNeto()"/></div>
+            </div>
+            <div class="fr">
+                <label>Peso Neto (kg) — calculado</label>
+                <div style="display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:var(--r3);background:rgba(14,138,122,.12);border:2px solid rgba(14,138,122,.4);font-size:1.35rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:#0e8a7a;letter-spacing:.02em;padding:8px 16px;box-shadow:inset 0 2px 6px rgba(0,0,0,.07)">
+                    <span id="pesoNetoDisplay">—</span>
+                </div>
+                <input type="hidden" id="pesoNeto"/>
+            </div>
         </div></div>
 
         <div class="block"><div class="bhead"><span class="btag b">13 · 19 · 14</span><span class="btitle">Instrucciones y Condiciones</span></div><div class="bbody">
@@ -1618,13 +1648,35 @@ select {
         <div class="block"><div class="bhead"><span class="btag t">TPL</span><span class="btitle">Plantillas Guardadas</span></div><div class="bbody" id="tmplList"><div class="hist-empty" style="padding:20px 0">Sin plantillas guardadas</div></div></div>
     </div>
 
+    <!-- ── Panel: Vista Conductor ── -->
+    <div id="panel-cond" role="tabpanel" class="panel"><div id="cd-list"></div></div>
+    <div id="cd-qr"><img id="cd-qr-img" alt="QR DeCA"/><div id="cd-qr-num" class="cd-num" style="margin-top:10px"></div><button onclick="closeCondQR()">Cerrar</button></div>
+
     <!-- ── Panel: Config ── -->
     <div id="panel-cfg" role="tabpanel" class="panel">
         <div class="block"><div class="bhead"><span class="btag a">NUM</span><span class="btitle">Numeración Automática</span></div><div class="bbody">
-            <div class="hint">El número se genera como <b>PREFIJO-AAAAMMDD-XXXX</b> donde XXXX son las <b>4 últimas cifras del albarán</b>.</div>
+            <div class="hint">En modo <b>Fecha + albarán</b> el número es <b>PREFIJO-AAAAMMDD-XXXX</b> (XXXX = <b>4 últimas cifras del albarán</b>). En modo <b>Correlativo</b> es un contador que sube solo.</div>
             <div class="fr2">
                 <div class="fr"><label>Prefijo CMR Internacional</label><input id="cfgPrefix" type="text" placeholder="CMR" maxlength="8" oninput="updateNumPreview()"/></div>
                 <div class="fr"><label>Prefijo Carta Nacional</label><input id="cfgPrefixNacional" type="text" placeholder="CP" maxlength="8" oninput="updateNumPreview()"/></div>
+            </div>
+            <div class="fr" style="margin-top:12px"><label>Sistema de numeración</label>
+                <select id="cfgNumMode" onchange="updateNumPreview()">
+                    <option value="fecha">Fecha + albarán (PREFIJO-AAAAMMDD-XXXX)</option>
+                    <option value="correlativo">Correlativo (PREFIJO-AAAA-0001)</option>
+                </select></div>
+            <div id="cfgNumCorr" style="display:none">
+                <div class="fr2">
+                    <div class="fr"><label>Separador</label><select id="cfgNumSep" onchange="updateNumPreview()"><option value="-">Guion  -</option><option value=".">Punto  .</option><option value="_">Guion bajo  _</option><option value="">Ninguno</option></select></div>
+                    <div class="fr"><label>Cifras del número</label><input id="cfgNumDigits" type="number" min="1" max="8" placeholder="4" oninput="updateNumPreview()"/></div>
+                </div>
+                <div class="fr2">
+                    <div class="fr"><label>Próximo n.º Carta Nacional</label><input id="cfgNumNextNac" type="number" min="1" placeholder="1" oninput="updateNumPreview()"/></div>
+                    <div class="fr"><label>Próximo n.º CMR Internacional</label><input id="cfgNumNextCmr" type="number" min="1" placeholder="1" oninput="updateNumPreview()"/></div>
+                </div>
+                <label style="display:flex;gap:8px;align-items:center;margin-top:10px;font-size:.8rem"><input id="cfgNumIncYear" type="checkbox" checked onchange="updateNumPreview()"/> Incluir el año en el número</label>
+                <label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:.8rem"><input id="cfgNumReset" type="checkbox" checked onchange="updateNumPreview()"/> Reiniciar la cuenta a 1 cada año</label>
+                <div class="hint" style="margin-top:8px">El contador sube al emitir un documento con número automático. Los números escritos a mano no gastan número. Pulsa <b>Guardar</b> en esta pestaña para aplicar los cambios.</div>
             </div>
             <div style="font-size:.7rem;color:var(--dim);margin-top:4px" id="numPreview"></div>
         </div></div>
@@ -2031,6 +2083,96 @@ window.closeBS = () => document.getElementById('bs-bg').classList.remove('on');
 document.getElementById('bs-bg')?.addEventListener('click', e => { if (e.target === e.currentTarget) closeBS(); });
 
 // ── Tabs ──────────────────────────────────────────────────────
+// ══ Vista Conductor ══
+(function(){
+const esc = x => String(x == null ? '' : x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const isoDay = d => d.toISOString().slice(0,10);
+function condQRDataURL(url){
+    const qr = qrcode(0,'M'); qr.addData(url); qr.make();
+    const n = qr.getModuleCount(), cell = 12, mg = 4*cell, size = n*cell + mg*2;
+    const c = document.createElement('canvas'); c.width = c.height = size;
+    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0,0,size,size); x.fillStyle = '#000';
+    for (let r=0;r<n;r++) for (let k=0;k<n;k++) if (qr.isDark(r,k)) x.fillRect(mg+k*cell, mg+r*cell, cell, cell);
+    return c.toDataURL('image/png');
+}
+window._cdMap = {};
+function card(r, deca){
+    const key = 'k' + Object.keys(window._cdMap).length; window._cdMap[key] = {r, deca};
+    const g = (r.goodsLines && r.goodsLines[0]) || {};
+    const kg = r.pesoNeto || r.pesoBruto || g.weight || '';
+    const ruta = [r.placeLoading, r.placeDelivery].filter(Boolean).map(esc).join(' → ') || 'Sin ruta';
+    const mercancia = [g.desc, kg ? kg + ' kg' : ''].filter(Boolean).map(esc).join(' · ');
+    const btns = deca ? `
+        <button class="cd-btn main" onclick="showCondFicha('${key}')">VER DeCA</button>
+        <button class="cd-btn" onclick="showCondQR('${esc(deca.uuid)}')">MOSTRAR QR</button>
+        <button class="cd-btn" onclick="shareCond('${key}')">📲 ENVIAR AL CONDUCTOR</button>
+        <a class="cd-btn" href="${esc(deca.url)}" download="${esc(deca.fname)}">DESCARGAR PDF</a>`
+      : `<div class="cd-warn">⚠ DeCA aún no emitido — no válido como documento de control</div>`;
+    return `<div class="cd-card"><div class="cd-num">${esc(r.docNum || 'Sin N.º')}</div>
+        <div class="cd-route">${ruta}</div>
+        ${mercancia ? `<div class="cd-goods">${mercancia}</div>` : ''}${btns}</div>`;
+}
+window.renderConductor = async function(){
+    const box = document.getElementById('cd-list'); if (!box) return;
+    try {
+        window._cdMap = {};
+        const [docs, decas] = await Promise.all([dbAll(STORE), _idbAll(DECA)]);
+        const byNum = {}; window._condDecas = {};
+        decas.forEach(d => { window._condDecas[d.uuid] = d; if (!byNum[d.docNum] || d.version > byNum[d.docNum].version) byNum[d.docNum] = d; });
+        const day = r => r.dateTransport || r.docDate || (r.savedAt||'').slice(0,10);
+        const today = isoDay(new Date());
+        const sorted = docs.slice().sort((a,b) => (b.savedAt||'').localeCompare(a.savedAt||''));
+        const hoy = sorted.filter(r => day(r) === today);
+        const prev = sorted.filter(r => day(r) < today).slice(0,5);
+        const f = new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long'}).toUpperCase();
+        box.innerHTML = `<div class="cd-h">🚛 MIS TRANSPORTES<br>HOY · ${esc(f)}</div>`
+            + (hoy.length ? hoy.map(r => card(r, byNum[r.docNum])).join('') : '<div class="hist-empty">No hay transportes para hoy</div>')
+            + (prev.length ? `<details><summary class="cd-h" style="cursor:pointer">ANTERIORES (${prev.length})</summary>${prev.map(r => card(r, byNum[r.docNum])).join('')}</details>` : '');
+    } catch(e) { box.innerHTML = '<div class="hist-empty">No se pudieron leer los transportes</div>'; }
+};
+window.showCondFicha = function(key){
+    const e = (window._cdMap||{})[key]; if (!e) return;
+    const r = e.r, g = (r.goodsLines && r.goodsLines[0]) || {};
+    const rows = [
+        ['Documento', r.docNum], ['Fecha', r.dateTransport || r.docDate],
+        ['Origen', r.placeLoading], ['Destino', r.placeDelivery],
+        ['Mercancía', g.desc], ['Peso', (r.pesoNeto || r.pesoBruto || g.weight) ? (r.pesoNeto || r.pesoBruto || g.weight) + ' kg' : ''],
+        ['Transportista', (r.carrierBlock || '').split('\n')[0].trim()], ['NIF transportista', r.carrierNIF],
+        ['Conductor', r.driverName], ['Matrícula', r.plateTractor], ['Remolque', r.plateTrailer]
+    ].filter(x => x[1]);
+    let o = document.getElementById('cd-ficha');
+    if (!o) { o = document.createElement('div'); o.id = 'cd-ficha';
+        o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--bg,#f2ede3);overflow:auto;padding:max(16px,env(safe-area-inset-top)) 16px 30px';
+        document.body.appendChild(o); }
+    o.innerHTML = '<div class="cd-h">DeCA · FICHA DEL TRANSPORTE</div><div class="cd-card">'
+        + rows.map(x => `<div style="padding:9px 0;border-bottom:1px solid var(--bg4)"><div class="cd-num">${esc(x[0]).toUpperCase()}</div><div style="font-weight:700;font-size:1.05rem">${esc(x[1])}</div></div>`).join('')
+        + '</div><button class="cd-btn" onclick="document.getElementById(\'cd-ficha\').style.display=\'none\'">CERRAR</button>';
+    o.style.display = 'block';
+};
+window.shareCond = async function(key){
+    const e = (window._cdMap||{})[key]; if (!e || !e.deca) return;
+    const r = e.r, g = (r.goodsLines && r.goodsLines[0]) || {};
+    const p = {n: r.docNum || '', o: r.placeLoading || '', d: r.placeDelivery || '', m: g.desc || '',
+        k: r.pesoNeto || r.pesoBruto || g.weight || '', f: r.dateTransport || r.docDate || '',
+        u: e.deca.url, fn: e.deca.fname, id: e.deca.uuid,
+        t: r.plateTractor || '', rm: r.plateTrailer || '', c: (r.carrierBlock || '').split('\n')[0].trim(), cn: r.carrierNIF || '', cd: r.driverName || ''};
+    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(p)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const url = new URL('conductor.html', location.href).href + '#c=' + b64;
+    const text = 'Transporte ' + p.n + (p.d ? ' → ' + p.d : '');
+    try {
+        if (navigator.share) await navigator.share({title: 'Transporte ' + p.n, text, url});
+        else { await navigator.clipboard.writeText(url); toast('✓ Enlace copiado','ok',3000); }
+    } catch(err) { if (err && err.name !== 'AbortError') { try { await navigator.clipboard.writeText(url); toast('✓ Enlace copiado','ok',3000); } catch(e2) {} } }
+};
+window.showCondQR = function(uuid){
+    const d = (window._condDecas||{})[uuid]; if (!d) return;
+    document.getElementById('cd-qr-img').src = condQRDataURL(d.url);
+    document.getElementById('cd-qr-num').textContent = d.docNum;
+    document.getElementById('cd-qr').style.display = 'flex';
+};
+window.closeCondQR = function(){ document.getElementById('cd-qr').style.display = 'none'; };
+})();
+
 window.tab = function(n) {
     document.querySelectorAll('.tab').forEach(t => {
         const active = t.dataset.p === n;
@@ -2042,6 +2184,7 @@ window.tab = function(n) {
     if (n === 'agenda') renderAgenda();
     if (n === 'tmpl')   renderTemplates();
     if (n === 'cfg')    { syncCfgPanel(); renderDecaLog(); }
+    if (n === 'cond')   renderConductor();
     if (n === 'hoy')    renderHoy();
     if (n === 'ayer')   renderAyer();
     if (n === 'manana') renderManana();
@@ -2168,7 +2311,7 @@ window.buildTplClientMap = async function() {
 
 const FIELDS = ['docNum','docDate','dateTransport','placeEmission','docsAnexos','senderBlock','senderNIF','rcvBlock',
     'placeLoading','placeDelivery','dateDelivery','clientRef','carrierBlock','carrierNIF','driverName',
-    'driverDNI','driverCAP','driverPermiso','plateTractor','plateTrailer','conjuntoArticulado','senderInstr','authEspecial','cambioVehiculo','freightTerms','codAmount',
+    'driverDNI','driverCAP','driverPermiso','plateTractor','plateTrailer','pesoBruto','taraVehiculo','pesoNeto','conjuntoArticulado','senderInstr','authEspecial','cambioVehiculo','freightTerms','codAmount',
     'observations','tipoDoc','freeline-1','freeline-2','eurosCargados','eurosDevueltos'];
 
 window.collect = function() {
@@ -2202,8 +2345,19 @@ window.collect = function() {
     return d;
 };
 
+window.calcPesoNeto = function() {
+    const bruto = parseFloat(document.getElementById('pesoBruto')?.value) || 0;
+    const tara  = parseFloat(document.getElementById('taraVehiculo')?.value) || 0;
+    const neto  = bruto > 0 ? Math.max(0, bruto - tara) : 0;
+    const display = document.getElementById('pesoNetoDisplay');
+    const input   = document.getElementById('pesoNeto');
+    if (display) display.textContent = (bruto > 0) ? neto.toLocaleString('es-ES') + ' kg' : '—';
+    if (input)   input.value = (bruto > 0) ? String(neto) : '';
+};
+
 window.fill = function(d) {
     FIELDS.forEach(f => sv(f, d[f] || ''));
+    calcPesoNeto();
     try { fillGoodsLines(d.goodsLines || []); } catch (e) {}
     try { fillSuccessiveCarriers(d.successiveCarriers || []); } catch (e) {}
     _restoreSigs(d);
@@ -2276,9 +2430,24 @@ window.addEventListener('resize', () => {
 });
 
 // ── Numeración ────────────────────────────────────────────────
+window._numKeys = t => t === 'nacional' ? {n:'numNextNac', y:'numYearNac'} : {n:'numNextCmr', y:'numYearCmr'};
+window._numNext = function(cfg, tipo) {
+    const k = _numKeys(tipo);
+    let n = parseInt(cfg[k.n], 10); if (!(n > 0)) n = 1;
+    if (cfg.numReset !== false && cfg[k.y] && cfg[k.y] !== new Date().getFullYear()) n = 1;
+    return n;
+};
+window.genDocNumCorrelativo = function(cfg, tipo) {
+    const prefix = tipo === 'nacional' ? (cfg.prefixNacional || 'CP') : (cfg.prefix || 'CMR');
+    const sep = cfg.numSep == null ? '-' : cfg.numSep;
+    const digits = Math.min(8, Math.max(1, parseInt(cfg.numDigits, 10) || 4));
+    const yr = cfg.numIncYear !== false ? new Date().getFullYear() + sep : '';
+    return prefix + sep + yr + String(_numNext(cfg, tipo)).padStart(digits, '0');
+};
 window.genDocNum = function() {
     const cfg = JSON.parse(localStorage.getItem('cmr_cfg') || '{}');
     const tipoDoc = (document.getElementById('tipoDoc')?.value || 'cmr');
+    if ((cfg.numMode || 'fecha') === 'correlativo') return genDocNumCorrelativo(cfg, tipoDoc);
     const prefix = tipoDoc === 'nacional'
         ? (cfg.prefixNacional || 'CP')
         : (cfg.prefix || 'CMR');
@@ -2293,7 +2462,7 @@ window.updateDocNum = function() {
     const inp = document.getElementById('docNum');
     if (inp && !inp.readOnly) return;
     const current = gv('docNum');
-    const autoPattern = /^[A-Z0-9]+-\d{6,8}-\d+$/;
+    const autoPattern = /^[A-Z0-9]+([-._]?)(\d{4,8}\1)?\d+$/i;
     if (!current || autoPattern.test(current)) sv('docNum', genDocNum());
 };
 
@@ -2321,6 +2490,16 @@ window.updateNumPreview = function() {
     const prefixN = gv('cfgPrefixNacional') || 'CP';
     const now = new Date();
     const d = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
+    const mode = (document.getElementById('cfgNumMode') || {}).value || 'fecha';
+    const corr = document.getElementById('cfgNumCorr'); if (corr) corr.style.display = mode === 'correlativo' ? 'block' : 'none';
+    if (mode === 'correlativo') {
+        const c = {prefix, prefixNacional: prefixN, numSep: gv('cfgNumSep') , numDigits: gv('cfgNumDigits'),
+            numIncYear: !!(document.getElementById('cfgNumIncYear') || {}).checked, numReset: false,
+            numNextNac: gv('cfgNumNextNac'), numNextCmr: gv('cfgNumNextCmr')};
+        const sel = document.getElementById('cfgNumSep'); c.numSep = sel ? sel.value : '-';
+        el.textContent = `Internacional: ${genDocNumCorrelativo(c, 'cmr')} · Nacional: ${genDocNumCorrelativo(c, 'nacional')}`;
+        return;
+    }
     el.textContent = `Internacional: ${prefix}-${d}-XXXX · Nacional: ${prefixN}-${d}-XXXX`;
 };
 
@@ -2337,8 +2516,19 @@ window.saveDefaults = function() {
 window.saveCfg = function() {
     const cfg = JSON.parse(localStorage.getItem('cmr_cfg') || '{}');
     Object.assign(cfg, { senderBlock: gv('cfgSenderBlock'), carrierBlock: gv('cfgCarrierBlock'), placeEmission: gv('cfgEmission'), prefix: gv('cfgPrefix') || 'CMR', prefixNacional: gv('cfgPrefixNacional') || 'CP', senderNIF: gv('cfgSenderNIF'), carrierNIF: gv('cfgCarrierNIF') });
+    const _sel = document.getElementById('cfgNumSep');
+    const _dg = parseInt(gv('cfgNumDigits'), 10);
+    Object.assign(cfg, {
+        numMode: gv('cfgNumMode') || 'fecha', numSep: _sel ? _sel.value : '-',
+        numDigits: _dg > 0 ? Math.min(8, _dg) : 4,
+        numIncYear: !!document.getElementById('cfgNumIncYear').checked, numReset: !!document.getElementById('cfgNumReset').checked
+    });
+    [['cfgNumNextNac','nacional'],['cfgNumNextCmr','cmr']].forEach(([id, t]) => {
+        const v = parseInt(gv(id), 10); const k = _numKeys(t);
+        if (v > 0 && v !== _numNext(cfg, t)) { cfg[k.n] = v; cfg[k.y] = new Date().getFullYear(); }
+    });
     localStorage.setItem('cmr_cfg', JSON.stringify(cfg));
-    loadDefaults(); toast('✓ Configuración guardada', 'ok');
+    loadDefaults(); try { updateDocNum(); } catch(e) {} toast('✓ Configuración guardada', 'ok');
 };
 
 window.loadDefaults = function() {
@@ -2365,6 +2555,10 @@ window.syncCfgPanel = function() {
     sv('cfgSenderBlock', cfg.senderBlock); sv('cfgCarrierBlock', cfg.carrierBlock);
     sv('cfgEmission', cfg.placeEmission);  sv('cfgPrefix', cfg.prefix || 'CMR');  sv('cfgPrefixNacional', cfg.prefixNacional || 'CP');
     sv('cfgSenderNIF', cfg.senderNIF || ''); sv('cfgCarrierNIF', cfg.carrierNIF || '');
+    sv('cfgNumMode', cfg.numMode || 'fecha'); sv('cfgNumSep', cfg.numSep == null ? '-' : cfg.numSep); sv('cfgNumDigits', cfg.numDigits || 4);
+    sv('cfgNumNextNac', _numNext(cfg, 'nacional')); sv('cfgNumNextCmr', _numNext(cfg, 'cmr'));
+    document.getElementById('cfgNumIncYear').checked = cfg.numIncYear !== false;
+    document.getElementById('cfgNumReset').checked = cfg.numReset !== false;
     updateNumPreview();
 };
 
@@ -2459,6 +2653,7 @@ window.removeSello = function() {
 window.newCMR = window.doNewCMR = function() {
     closeBS();
     FIELDS.forEach(id => sv(id, ''));
+    calcPesoNeto();
     sv('freightTerms', 'PORT PAGADO');
     sv('tipoDoc', 'cmr');
     fillGoodsLines([]); fillSuccessiveCarriers([]);
@@ -2681,15 +2876,40 @@ window.saveDrvToAgenda = async function() {
         if (existing) {
             await dbDel(AG, existing.id);
             await dbAdd(AG, { type: 'drv', name, dni: dni.toUpperCase(), tractor: gvUp('plateTractor'), trailer: gvUp('plateTrailer'), savedAt: new Date().toISOString() });
-            toast('\u2713 Conductor actualizado', 'ok'); renderDrvQF(); renderAgenda(); return;
+            toast('\u2713 Conductor actualizado', 'ok'); renderDrvQF(); renderAgenda(); populateDriverList(); return;
         }
     }
     await dbAdd(AG, { type: 'drv', name, dni: dni ? dni.toUpperCase() : '', tractor: gvUp('plateTractor'), trailer: gvUp('plateTrailer'), savedAt: new Date().toISOString() });
-    toast('\u2713 Conductor guardado', 'ok'); renderDrvQF(); renderAgenda();
+    toast('\u2713 Conductor guardado', 'ok'); renderDrvQF(); renderAgenda(); populateDriverList();
 };
 
 window.fillRcv = async id => { const all = await dbAll(AG); const r = all.find(x => x.id == id); if (!r) return; sv('rcvBlock', r.block); tab('form'); toast('✓ Consignatario cargado', 'ok'); };
 window.fillDrv = async id => { const all = await dbAll(AG); const d = all.find(x => x.id == id); if (!d) return; sv('driverName', d.name); sv('driverDNI', d.dni || ''); sv('plateTractor', d.tractor || ''); sv('plateTrailer', d.trailer || ''); tab('form'); toast('✓ Conductor cargado', 'ok'); };
+// Autocompletar conductor — al elegir un nombre de la agenda rellena DNI y transportista
+window._driverCache = [];
+window.populateDriverList = async function() {
+    const all = await dbAll(AG);
+    window._driverCache = all.filter(x => x.type === 'drv');
+    window._carrierCache = all.filter(x => x.type === 'car');
+    const dl = document.getElementById('driverList');
+    if (!dl) return;
+    const esc = t => String(t == null ? '' : t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    dl.innerHTML = window._driverCache.map(d => `<option value="${esc(d.name)}">`).join('');
+};
+window.onDriverInput = function(val) {
+    if (!val) return;
+    const match = (window._driverCache || []).find(d => (d.name || '').toLowerCase() === val.toLowerCase());
+    if (!match) return;
+    const filled = [];
+    if (match.dni) { sv('driverDNI', match.dni); filled.push('DNI'); }
+    if (match.carrierId) {
+        const car = (window._carrierCache || []).find(x => x.id == match.carrierId);
+        if (car && car.block) { sv('carrierBlock', car.block); filled.push('transportista'); }
+    } else if (match.carrier) {
+        sv('carrierBlock', match.carrier); filled.push('transportista');
+    }
+    if (filled.length) toast('✓ ' + filled.join(' y ') + ' autocompletado' + (filled.length > 1 ? 's' : ''), 'ok');
+};
 window.fillCar = async id => { const all = await dbAll(AG); const c = all.find(x => x.id == id); if (!c) return; sv('carrierBlock', c.block); tab('form'); renderCarQF(); toast('✓ Transportista cargado', 'ok'); };
 
 window.saveCarToAgenda = async function() {
@@ -2739,7 +2959,7 @@ window.editDrv = async function(id) {
                 const trailer = ((document.getElementById(iTrail) || { value: '' }).value || '').toUpperCase().trim();
                 if (!name) { toast('El nombre es obligatorio', 'err', 3000); return; }
                 await dbDel(AG, id); await dbAdd(AG, { type: 'drv', name, dni, tractor, trailer, savedAt: new Date().toISOString() });
-                closeBS(); renderAgenda(); renderDrvQF(); toast('✓ Conductor actualizado', 'ok');
+                closeBS(); renderAgenda(); renderDrvQF(); populateDriverList(); toast('✓ Conductor actualizado', 'ok');
             }}
         ]
     );
@@ -3594,7 +3814,7 @@ window._appInit = async function() {
     window.renderHoy        = renderHoy;
     window.renderAyer       = renderAyer;
     window.renderManana     = renderManana;
-    await updateHistBadge(); renderRcvQF(); renderDrvQF(); renderCarQF(); renderPackingQF();
+    await updateHistBadge(); renderRcvQF(); renderDrvQF(); renderCarQF(); renderPackingQF(); populateDriverList();
     if (window._attachAutosaveListeners) window._attachAutosaveListeners();
     await updateBackupStats(); renderDecaLog();
 
@@ -3615,7 +3835,18 @@ window._appInit = async function() {
 // pdf.js — Generación de PDF (pdfmake): modelo Pro y Clásico
 // ============================================================
 
-function _advanceSeq(){ /* no-op: secuencia reemplazada por fecha+albarán */ }
+function _advanceSeq(data){
+    try {
+        const cfg = JSON.parse(localStorage.getItem('cmr_cfg') || '{}');
+        if ((cfg.numMode || 'fecha') !== 'correlativo' || !data) return;
+        const tipo = data.tipoDoc || 'cmr';
+        if (data.docNum !== genDocNumCorrelativo(cfg, tipo)) return; // número manual o ya consumido
+        const k = _numKeys(tipo);
+        cfg[k.n] = _numNext(cfg, tipo) + 1; cfg[k.y] = new Date().getFullYear();
+        localStorage.setItem('cmr_cfg', JSON.stringify(cfg));
+        updateDocNum();
+    } catch(e) { console.warn('Contador:', e); }
+}
 
 async function _sharePDF(blob, fname, docNum, safetyTimer, deca) {
     clearTimeout(safetyTimer);
@@ -3807,7 +4038,7 @@ async function quickSaveCMR(){
             const id = await dbAdd(STORE, data);
             data.id = id; window._activeRecordId = id;
         }
-        await updateHistBadge(); clearDraft();
+        await updateHistBadge(); clearDraft(); _advanceSeq(data);
         if (window.renderHist) renderHist();
         if (window.renderHoy)  renderHoy();
         if (window.renderAyer) renderAyer();
@@ -3984,7 +4215,7 @@ async function generateCMR(){
                 const id = await dbAdd(STORE, data);
                 data.id = id; window._activeRecordId = id;
             }
-            await updateHistBadge(); clearDraft(); _advanceSeq();
+            await updateHistBadge(); clearDraft(); _advanceSeq(data);
             if (window.renderHist) renderHist();
             if (window.renderHoy)  renderHoy();
             if (window.renderAyer) renderAyer();
@@ -3992,6 +4223,7 @@ async function generateCMR(){
         }catch(e){console.warn('DB save:',e);toast('⚠ Error guardando en historial: '+e.message,'err',6000);}
     } else {
         clearDraft();
+        _advanceSeq(data);
     }
     showOv(true);
     const safetyTimer=setTimeout(()=>{showOv(false);toast('⚠ Tiempo agotado','err',5000)},60000);
@@ -4069,18 +4301,22 @@ function _decaPrepare(D) {
     const uuid = window.crypto && window.crypto.randomUUID
         ? window.crypto.randomUUID()
         : 'deca-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-    // Prefijo de fecha solo para legibilidad en el bucket — el UUID es lo
-    // que garantiza unicidad real, no la fecha.
-    const fechaPrefix = (D.docDate || new Date().toISOString().slice(0,10));
-    const fname = 'nacional_' + fechaPrefix + '_' + uuid + '.pdf';
-    const url = window.SUPA_URL + '/storage/v1/object/public/' + window.SUPA_BUCKET + '/' + fname;
+    // Nombre corto: la URL va dentro del QR y cada carácter añade versión
+    // (y por tanto reduce el tamaño de módulo en el PDF). 12 hex + fecha
+    // mantienen la unicidad; el UUID completo se guarda en el registro DeCA.
+    const fechaPrefix = (D.docDate || new Date().toISOString().slice(0,10)).replace(/-/g,'');
+    const fname = 'Z_' + fechaPrefix + '_' + uuid.replace(/-/g,'').slice(0,12) + '.pdf';
+    // ?download= fuerza descarga directa (sin credenciales ni interacción).
+    const url = window.SUPA_URL + '/storage/v1/object/public/' + window.SUPA_BUCKET + '/' + fname
+              + '?download=' + fname;
     let qrDataURL = null;
     try {
         const qr = qrcode(0, 'M');
         qr.addData(url);
         qr.make();
         const count = qr.getModuleCount();
-        const cell = 6, margin = 4;
+        // Resolución alta: más nitidez al escalar el QR dentro del PDF.
+        const cell = 12, margin = 4;
         const size = count * cell + margin * 2;
         const canvas = document.createElement('canvas');
         canvas.width = size; canvas.height = size;
@@ -4390,6 +4626,21 @@ function buildPDF(D,safetyTimer){
         if(eurosCargados || eurosDevueltos) goodsBody.push([{text:[{text:'EURP. CARGADOS: ',bold:true,fontSize:8.5},{text:eurosCargados||'0'},{text:'    EURP. DEVUELTOS: ',bold:true,fontSize:8.5},{text:eurosDevueltos||'0'}],fontSize:8.5,color:'#111',margin:[3,2,3,2],colSpan:7,fillColor:'#fff',minHeight:12},{},{},{},{},{},{}]);
         content.push(colorLine());
         content.push({table:{widths:['auto','auto','auto','*','auto','auto','auto'],body:goodsBody,dontBreakRows:true},layout:lay,margin:[0,0,0,0]});
+
+        // ── Bloque de pesaje (peso bruto / tara / neto) ──
+        (function(){
+            const pB = D.pesoBruto    ? parseFloat(D.pesoBruto)    : null;
+            const pT = D.taraVehiculo ? parseFloat(D.taraVehiculo) : null;
+            const pN = (pB !== null && pT !== null) ? Math.max(0, pB - pT) : null;
+            if (pB === null) return;
+            const pLbl = (t, green) => ({text: t, fontSize: 6, bold: true, color: green ? '#0a6b60' : '#555', margin:[3,3,3,2], fillColor: green ? '#d0f0eb' : '#e8e8e8', border:[true,true,true,true], alignment:'center'});
+            const pVal = (v, green) => ({text: v, fontSize: green ? 13 : 10, bold: true, color: green ? '#0a6b60' : '#222', margin:[3,4,3,4], alignment:'center', fillColor: green ? '#e6f7f5' : '#ffffff', border:[true,true,true,true]});
+            content.push(colorLine());
+            content.push({table:{widths:['*','*','*'],body:[
+                [pLbl('PESO BRUTO (kg)'), pLbl('TARA VEHÍCULO (kg)'), pLbl('PESO NETO (kg)', true)],
+                [pVal(pB.toLocaleString('es-ES')), pVal(pT !== null ? pT.toLocaleString('es-ES') : '—'), pVal(pN !== null ? pN.toLocaleString('es-ES') + ' kg' : '—', true)]
+            ]},layout:lay,margin:[0,0,0,0]});
+        })();
 
         content.push(colorLine());
         content.push({table:{widths:['*','*'],body:[[(function(){const b=box(13,'Instrucciones del Remitente',D.senderInstr||'—'); b.stack.push(spacer(8)); return b;})(),(function(){const b=box(18,'Reservas y Observaciones',D.observations||''); b.stack.push(spacer(8)); return b;})()]]},layout:lay,margin:[0,0,0,0]});
@@ -4857,6 +5108,24 @@ function buildPDF_Classic(D, safetyTimer){
             r5.table.heights.push(16);
         }
 
+        // Pesaje
+        const _clPB = D.pesoBruto    ? parseFloat(D.pesoBruto)    : null;
+        const _clPT = D.taraVehiculo ? parseFloat(D.taraVehiculo) : null;
+        const _clPN = (_clPB!==null&&_clPT!==null) ? Math.max(0,_clPB-_clPT) : null;
+        if (_clPB !== null) {
+            r5.table.body.push([
+                {text:'PESO BRUTO',fontSize:6,bold:true,color:'#000',fillColor:GR,margin:[3,2,3,1],border:bA,alignment:'center',colSpan:2},{},
+                {text:'TARA VEHÍCULO',fontSize:6,bold:true,color:'#000',fillColor:GR,margin:[3,2,3,1],border:bA,alignment:'center',colSpan:2},{},
+                {text:'PESO NETO',fontSize:6,bold:true,color:'#007a6e',fillColor:'#e6f7f5',margin:[3,2,3,1],border:bA,alignment:'center',colSpan:3},{},{}
+            ]);
+            r5.table.body.push([
+                {text:_clPB.toLocaleString('es-ES')+' kg',fontSize:8,color:'#000',fillColor:WH,margin:[3,3,3,3],border:bA,alignment:'center',colSpan:2},{},
+                {text:_clPT!==null?_clPT.toLocaleString('es-ES')+' kg':'—',fontSize:8,color:'#000',fillColor:WH,margin:[3,3,3,3],border:bA,alignment:'center',colSpan:2},{},
+                {text:_clPN!==null?_clPN.toLocaleString('es-ES')+' kg':'—',fontSize:9,bold:true,color:'#007a6e',fillColor:'#e6f7f5',margin:[3,3,3,3],border:bA,alignment:'center',colSpan:3},{},{}
+            ]);
+            r5.table.heights.push(11, 16);
+        }
+
         // ── ROW 6: Instrucciones/Pago + Emisión ──
         // Left col spans all: instrucciones(13) + forma de pago(14) + lugar emisión(21)
         // Right col: estipulaciones(19) header + text + payment table(20) + TOTAL + emission date
@@ -5126,6 +5395,19 @@ function buildPDF_IncoDocs(D, safetyTimer){
         if(_f2) gTableBody.push([{text:_f2,fontSize:7.5,color:BLK,margin:[3,3,3,3],colSpan:7,fillColor:WH,border:[true,true,true,true]},{},{},{},{},{},{}]);
         if(_eC||_eD) gTableBody.push([{text:[{text:'EURP. CARGADOS: ',bold:true,fontSize:8},{text:_eC||'0'},{text:'    EURP. DEVUELTOS: ',bold:true,fontSize:8},{text:_eD||'0'}],fontSize:8,color:BLK,margin:[3,3,3,3],colSpan:7,fillColor:WH,border:[true,true,true,true]},{},{},{},{},{},{}]);
         content.push({table:{widths:gW,body:gTableBody},layout:{hLineWidth:(i,n)=>i===0||i===1||i===n.table.body.length?0.8:0.6,vLineWidth:()=>0.8,hLineColor:()=>BDR,vLineColor:()=>BDR},margin:[0,0,0,2]});
+
+        // ── Bloque de pesaje ──
+        const _pB = D.pesoBruto    ? parseFloat(D.pesoBruto)    : null;
+        const _pT = D.taraVehiculo ? parseFloat(D.taraVehiculo) : null;
+        const _pN = (_pB !== null && _pT !== null) ? Math.max(0, _pB - _pT) : null;
+        if (_pB !== null) {
+            const phd  = (t, green) => ({text:t, fontSize:6.5, bold:true, color: green ? '#0a6b60' : '#4a3828', fillColor: green ? '#d0f0eb' : LBL, margin:[4,3,4,3], border:[true,true,true,true], alignment:'center'});
+            const pval = (v, green) => ({text:v, fontSize: green ? 13 : 10, bold:!!green, color: green ? '#0a6b60' : BLK, fillColor: green ? '#e6f7f5' : WH, margin:[4,5,4,5], border:[true,true,true,true], alignment:'center'});
+            content.push({table:{widths:['33%','34%','33%'],body:[
+                [phd('PESO BRUTO (kg)'), phd('TARA VEHÍCULO (kg)'), phd('PESO NETO (kg)', true)],
+                [pval(_pB.toLocaleString('es-ES')), pval(_pT!==null?_pT.toLocaleString('es-ES'):'—'), pval(_pN!==null?_pN.toLocaleString('es-ES')+' kg':'—', true)]
+            ]},layout:lay,margin:[0,0,0,2]});
+        }
 
         // Instrucciones / Estipulaciones / Emisión — anclado al fondo
         const cl = isNac
